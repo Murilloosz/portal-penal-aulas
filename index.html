@@ -2323,156 +2323,60 @@ function toggleMateria(id) {
         </div>
 
         <!-- STEP 3 -->
-        <div class="wizard-panel" id="wizard-panel-3" style="display:none;">
-          <div class="wizard-panel-header">
-            <div class="section-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-            <div>
-              <h3>Horários Disponíveis</h3>
-              <p>Quantas horas por dia você pode estudar</p>
-            </div>
-          </div>
-          <div class="slider-row">
-            <div class="slider-top">
-              <span class="field-label">Horas por dia</span>
-              <span class="slider-value"><span id="horas-value">4</span>h</span>
-            </div>
-            <input type="range" id="horas-range" min="1" max="12" value="4" oninput="document.getElementById('horas-value').textContent = this.value;">
-            <div class="slider-range"><span>1h</span><span>12h</span></div>
-          </div>
-          <div class="slider-row">
-            <div class="slider-top">
-              <span class="field-label">Dias disponíveis por semana</span>
-              <span class="slider-value"><span id="dias-value">6</span>d</span>
-            </div>
-            <input type="range" id="dias-range" min="3" max="7" value="6" oninput="document.getElementById('dias-value').textContent = this.value;">
-            <div class="slider-range"><span>3d</span><span>7d</span></div>
-          </div>
-          <div class="slider-row">
-            <div class="slider-top">
-              <span class="field-label">Semanas até a prova</span>
-              <span class="slider-value"><span id="semanas-value">16</span>s</span>
-            </div>
-            <input type="range" id="semanas-range" min="4" max="52" value="16" oninput="document.getElementById('semanas-value').textContent = this.value;">
-            <div class="slider-range"><span>4s</span><span>52s</span></div>
-          </div>
-          <div class="wizard-footer">
-            <button class="btn btn-outline" onclick="wizardPrev()">Voltar</button>
-            <button class="btn btn-primary" onclick="wizardNext()">
-              Avançar
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 4 -->
-        <div class="wizard-panel" id="wizard-panel-4" style="display:none;">
-          <div class="wizard-panel-header">
-            <div class="section-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-            <div>
-              <h3>Revisão</h3>
-              <p>Confira as configurações antes de gerar o cronograma</p>
-            </div>
-          </div>
-          <div id="revisao-content"></div>
-          <div class="wizard-footer">
-            <button class="btn btn-outline" onclick="wizardPrev()">Voltar</button>
-            <button class="btn btn-primary" onclick="wizardGenerate()">
-              Gerar Cronograma
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 5 -->
-        <div class="wizard-panel" id="wizard-panel-5" style="display:none;">
-          <div class="wizard-panel-header">
-            <div class="section-icon primary"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg></div>
-            <div>
-              <h3>Cronograma Gerado</h3>
-              <p>Seu plano tático está pronto</p>
-            </div>
-          </div>
-          <div id="cronograma-result"></div>
-          <div class="wizard-footer">
-            <button class="btn btn-outline" onclick="wizardReset()">Novo Cronograma</button>
-            <button class="btn btn-primary" onclick="saveCronograma()">
-              Salvar no Histórico
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </section>
+        <!-- STEP 3 - HORÁRIOS (MELHORADO) -->
+<div class="wizard-panel" id="wizard-panel-3" style="display:none;">
+  <div class="wizard-panel-header">
+    <div class="section-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    </div>
+    <div>
+      <h3>Horários Disponíveis</h3>
+      <p>Quanto tempo você realmente consegue estudar?</p>
+    </div>
   </div>
 
-  <!-- ============ ANÁLISE ============ -->
-  <div class="page" id="page-analise">
-    <section class="section">
-      <div class="section-inner">
-        <div class="section-header">
-          <button class="wizard-back" onclick="goTo('base')" title="Voltar">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          </button>
-          <div>
-            <h2 class="section-title">Central de <span class="accent">Análise</span></h2>
-            <p class="section-subtitle">Envie seu edital para iniciar a análise tática</p>
-          </div>
-        </div>
-
-        <div class="analise-card">
-          <div class="analise-card-header">
-            <div class="section-icon primary"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg></div>
-            <div><h3 style="font-family:var(--font-heading);font-size:1.05rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;">Dados do Edital</h3></div>
-          </div>
-
-          <label class="field-label">Upload do Edital (PDF)</label>
-          <label class="upload-box" for="upload-input">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-            <div class="upload-box-text" id="upload-text">Clique para selecionar arquivo</div>
-          </label>
-          <input type="file" id="upload-input" accept=".pdf,.txt" style="display:none;" onchange="handleFileUpload(this)">
-
-          <div class="divider-or">ou</div>
-
-          <label class="field-label">Cole o Texto do Edital</label>
-          <textarea id="edital-text" placeholder="Cole aqui o conteúdo do edital do concurso..."></textarea>
-
-          <div class="slider-row">
-            <div class="slider-top">
-              <span class="field-label">Horas disponíveis por dia</span>
-              <span class="slider-value"><span id="analise-horas-value">4</span>h</span>
-            </div>
-            <input type="range" id="analise-horas" min="1" max="12" value="4" oninput="document.getElementById('analise-horas-value').textContent = this.value;">
-            <div class="slider-range"><span>1h</span><span>12h</span></div>
-          </div>
-
-          <button class="btn btn-primary btn-iniciar" onclick="iniciarAnalise()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-            Iniciar Análise Tática
-          </button>
-        </div>
-      </div>
-    </section>
+  <div class="slider-row">
+    <div class="slider-top">
+      <span class="field-label">Horas por dia</span>
+      <span class="slider-value"><span id="horas-value">4</span>h</span>
+    </div>
+    <input type="range" id="horas-range" min="1" max="12" value="4" oninput="updateTotalHours()">
+    <div class="slider-range"><span>1h</span><span>12h</span></div>
   </div>
 
-  <!-- ============ HISTÓRICO ============ -->
-  <div class="page" id="page-historico">
-    <section class="section">
-      <div class="section-inner">
-        <div class="section-header">
-          <div class="section-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>
-          </div>
-          <div>
-            <h2 class="section-title">Seu <span class="accent">Histórico</span></h2>
-            <p class="section-subtitle">Cronogramas e análises que você já criou</p>
-          </div>
-        </div>
-        <div id="historico-content"></div>
-      </div>
-    </section>
+  <div class="slider-row">
+    <div class="slider-top">
+      <span class="field-label">Dias disponíveis por semana</span>
+      <span class="slider-value"><span id="dias-value">6</span>d</span>
+    </div>
+    <input type="range" id="dias-range" min="3" max="7" value="6" oninput="updateTotalHours()">
+    <div class="slider-range"><span>3d</span><span>7d</span></div>
   </div>
+
+  <div class="slider-row">
+    <div class="slider-top">
+      <span class="field-label">Semanas até a prova</span>
+      <span class="slider-value"><span id="semanas-value">16</span>s</span>
+    </div>
+    <input type="range" id="semanas-range" min="4" max="52" value="16" oninput="updateTotalHours()">
+    <div class="slider-range"><span>4s</span><span>52s</span></div>
+  </div>
+
+  <!-- Preview ao vivo -->
+  <div style="margin-top:28px; padding:18px; background:hsl(var(--primary)/.08); border:1px solid hsl(var(--primary)/.3); border-radius:var(--radius); text-align:center;">
+    <strong style="font-family:var(--font-heading); font-size:.85rem; letter-spacing:1.5px; text-transform:uppercase;">Total estimado de estudo</strong><br>
+    <span id="total-horas-preview" style="font-size:2rem; font-weight:700; color:hsl(var(--accent)); font-family:var(--font-heading);">384 horas</span>
+    <div style="font-size:.8rem; color:hsl(var(--muted-foreground)); margin-top:4px;">≈ <span id="total-dias-preview">96</span> dias de estudo</div>
+  </div>
+
+  <div class="wizard-footer">
+    <button class="btn btn-outline" onclick="wizardPrev()">Voltar</button>
+    <button class="btn btn-primary" onclick="wizardNext()">
+      Avançar 
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+  </div>
+</div>
 
   <!-- ============ PESQUISA ============ -->
   <div class="page" id="page-pesquisa">
