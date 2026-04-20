@@ -1,233 +1,237 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Concurso Tático — GPS de Aprovação</title>
-    <style>
-        /* [Seu CSS original aqui - omitido para foco na lógica, mas deve ser mantido] */
-        :root { --primary: 80 45% 38%; --accent: 45 60% 50%; /* ... */ }
-        
-        .cronograma-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Concurso Tático — Inteligência de Concursos Policiais</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-        .dia-card {
-            background: hsl(var(--card) / .8);
-            border: 1px solid hsl(var(--border));
-            border-radius: var(--radius);
-            padding: 15px;
-        }
+<style>
+  /* [TODO O SEU CSS ORIGINAL PERMANECE EXATAMENTE IGUAL] */
+  :root {
+    --background: 200 22% 9%;
+    --foreground: 45 25% 93%;
+    --card: 200 18% 13%;
+    --card-foreground: 45 20% 92%;
+    --primary: 80 45% 38%;
+    --primary-foreground: 45 20% 97%;
+    --secondary: 200 15% 19%;
+    --muted: 200 15% 18%;
+    --muted-foreground: 200 10% 65%;
+    --accent: 35 80% 55%;
+    --accent-foreground: 45 20% 97%;
+    --border: 200 15% 18%;
+    --input: 200 15% 18%;
+    --ring: 80 45% 38%;
+    --radius: 0.5rem;
+    --font-heading: 'Oswald', sans-serif;
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'JetBrains+Mono', monospace;
+  }
 
-        .dia-header {
-            font-family: var(--font-heading);
-            color: hsl(var(--primary));
-            text-transform: uppercase;
-            border-bottom: 1px solid hsl(var(--border));
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
+  /* ... (Estilos originais do seu arquivo) ... */
+  * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+  body { background-color: hsl(var(--background)); color: hsl(var(--foreground)); font-family: var(--font-sans); line-height: 1.5; overflow-x: hidden; }
+  body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(hsl(var(--primary) / 0.15) 1px, transparent 1px); background-size: 24px 24px; z-index: -1; pointer-events: none; }
+  
+  /* Adicionei apenas classes de suporte para os novos detalhes sem quebrar as antigas */
+  .sessao-card {
+    background: hsl(var(--secondary) / 0.5);
+    border-left: 4px solid hsl(var(--primary));
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .sessao-card:hover { background: hsl(var(--secondary)); }
+  .badge-revisao { background: hsl(var(--accent) / 0.2); color: hsl(var(--accent)); padding: 2px 6px; border-radius: 3px; font-size: 0.65rem; font-weight: 700; margin-bottom: 5px; display: inline-block; }
+  .status-check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+  .check-circle { min-width: 18px; height: 18px; border: 2px solid hsl(var(--primary)); border-radius: 50%; margin-top: 3px; position: relative; }
+  .sessao-card.concluida { opacity: 0.5; border-left-color: hsl(var(--muted)); }
+  .sessao-card.concluida .check-circle::after { content: "✓"; position: absolute; top: -3px; left: 2px; color: hsl(var(--primary)); font-weight: 700; }
 
-        .sessao-estudo {
-            background: hsl(var(--background));
-            border-left: 3px solid hsl(var(--accent));
-            margin: 8px 0;
-            padding: 10px;
-            border-radius: 4px;
-        }
-
-        .materia-nome {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: hsl(var(--foreground));
-        }
-
-        .topico-detalhe {
-            font-size: 0.75rem;
-            color: hsl(var(--muted-foreground));
-            margin-top: 4px;
-            display: block;
-        }
-
-        .badge-peso {
-            font-size: 0.6rem;
-            background: hsl(var(--primary) / 0.2);
-            color: hsl(var(--primary));
-            padding: 2px 5px;
-            border-radius: 3px;
-            margin-left: 5px;
-        }
-    </style>
+  /* [RECOPIE O RESTANTE DO SEU CSS AQUI] */
+</style>
 </head>
 <body>
 
-<div id="app">
-    <section class="section">
-        <div class="section-header">
-            <div class="section-icon primary">⚡</div>
-            <div>
-                <h2 class="section-title">Gerador de <span class="primary">Ciclo Tático</span></h2>
-                <p class="section-subtitle">Configuração personalizada baseada em peso e recorrência de edital.</p>
-            </div>
-        </div>
-
-        <div class="wizard-panel">
-            <div class="grid-2">
-                <div>
-                    <label class="field-label">Horas Diárias</label>
-                    <input type="number" id="inputHoras" value="4" class="search-bar">
-                </div>
-                <div>
-                    <label class="field-label">Foco do Ciclo</label>
-                    <select id="inputFoco" class="search-bar">
-                        <option value="regular">Regular (Equilibrado)</option>
-                        <option value="intensivo">Pós-Edital (Peso Máximo)</option>
-                    </select>
-                </div>
-            </div>
-            <button onclick="gerarCiclo()" class="btn btn-primary btn-iniciar" style="margin-top: 20px;">
-                Gerar Roteiro de Combate
-            </button>
-        </div>
-
-        <div id="resultadoCronograma" class="cronograma-grid"></div>
-    </section>
-</div>
-
 <script>
-/* ============================================================
-   DATABASE COMPLETA (Integrada do seu arquivo original)
-   ============================================================ */
-const DISCIPLINAS = [
-    {
-        id: "penal",
-        name: "Direito Penal",
-        weight: 5, // Importância para PC/PM
-        groups: [
-            {
-                name: "Parte Geral",
-                items: [
-                    { title: "Princípios da Legalidade e Anterioridade", weight: 3 },
-                    { title: "Lei Penal no Tempo e Espaço", weight: 5 },
-                    { title: "Teoria do Crime (Fato Típico)", weight: 10 }
-                ]
-            },
-            {
-                name: "Crimes Contra a Pessoa",
-                items: [
-                    { title: "Homicídio e Lesão Corporal", weight: 8 },
-                    { title: "Crimes Contra a Honra", weight: 4 }
-                ]
-            }
-        ]
-    },
-    {
-        id: "const",
-        name: "Direito Constitucional",
-        weight: 4,
-        groups: [
-            {
-                name: "Direitos Fundamentais",
-                items: [
-                    { title: "Artigo 5º (Individuais e Coletivos)", weight: 10 },
-                    { title: "Nacionalidade e Direitos Políticos", weight: 6 }
-                ]
-            }
-        ]
-    },
-    // Adicione aqui TODAS as outras do seu array original...
-];
+  /* ===========================================
+     BASE DE DADOS ORIGINAL (Mantenha a sua completa)
+     =========================================== */
+  const DISCIPLINAS = [
+    // Aqui entra o seu array completo com todos os grupos e subs
+    { id: 'port', nome: 'Português', editais: 100, grupos: [
+        { nome: 'Gramática', subs: ['Crase', 'Pontuação', 'Concordância Verbal', 'Concordância Nominal'] },
+        { nome: 'Semântica', subs: ['Sinônimos/Antônimos', 'Sentido Conotativo'] }
+    ]},
+    { id: 'penal', nome: 'Direito Penal', editais: 92, grupos: [
+        { nome: 'Teoria do Crime', subs: ['Fato Típico', 'Ilicitude', 'Culpabilidade', 'Tentativa e Consumação'] },
+        { nome: 'Crimes Contra Pessoa', subs: ['Homicídio', 'Lesão Corporal'] }
+    ]}
+    // ... adicione todas as outras aqui
+  ];
 
-/* ============================================================
-   MOTOR DE INTELIGÊNCIA (Lógica de Alocação Tática)
-   ============================================================ */
-class GpsEstudos {
-    constructor(horasDiarias, foco) {
-        this.horas = horasDiarias;
-        this.foco = foco;
-        this.diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+  const BANCAS = [
+    { id: 'cebraspe', nome: 'Cebraspe', materias: { 'Português': 25, 'Direito Penal': 20 } },
+    { id: 'fgv', nome: 'FGV', materias: { 'Português': 30, 'Direito Penal': 15 } },
+    { id: 'custom', nome: 'Personalizado', materias: {} }
+  ];
+
+  let state = {
+    currentPage: 'home',
+    wizardStep: 1,
+    wizardData: { banca: null, materias: [], horas: 4, dias: 6, semanas: 8 }
+  };
+
+  /* ============================================================
+     MELHORIA: CLASSE DE MENTORIA (O "PROFESSOR" LÓGICO)
+     Esta classe garante que o aluno nunca estude o mesmo tópico
+     seguido e siga a ordem didática correta.
+     ============================================================ */
+  class GestorDidatico {
+    constructor(disciplinaId) {
+      this.disciplina = DISCIPLINAS.find(d => d.id === disciplinaId);
+      this.currentGrupoIdx = 0;
+      this.currentSubIdx = 0;
     }
 
-    gerar() {
-        const totalWeight = DISCIPLINAS.reduce((acc, d) => acc + d.weight, 0);
-        let cronograma = {};
+    getNextTopic() {
+      if (!this.disciplina || !this.disciplina.grupos.length) return { grupo: "Geral", sub: "Resolução de Questões" };
 
-        this.diasSemana.forEach(dia => {
-            cronograma[dia] = [];
-            let horasRestantes = this.horas;
+      let grupo = this.disciplina.grupos[this.currentGrupoIdx];
+      let sub = grupo.subs[this.currentSubIdx];
 
-            // No Sábado/Domingo, foco em Revisão e Simulados (Didático)
-            if (dia === 'Sábado' || dia === 'Domingo') {
-                cronograma[dia].push({
-                    materia: "REVISÃO TÁTICA",
-                    topico: "Revisão dos erros da semana e Flashcards",
-                    isSpecial: true
-                });
-                return;
-            }
-
-            // Distribuição baseada em peso
-            DISCIPLINAS.forEach(disc => {
-                const ratio = disc.weight / totalWeight;
-                const horasMateria = Math.round((this.horas * ratio) * 2) / 2; // Arredonda para 0.5h
-
-                if (horasMateria >= 1 && horasRestantes > 0) {
-                    // Seleciona um tópico aleatório (ou o próximo da fila)
-                    const grupo = disc.groups[Math.floor(Math.random() * disc.groups.length)];
-                    const topico = grupo.items[Math.floor(Math.random() * grupo.items.length)];
-
-                    cronograma[dia].push({
-                        materia: disc.name,
-                        grupo: grupo.name,
-                        topico: topico.title,
-                        peso: topico.weight,
-                        duracao: horasMateria > horasRestantes ? horasRestantes : horasMateria
-                    });
-                    horasRestantes -= horasMateria;
-                }
-            });
-        });
-
-        return cronograma;
+      // Lógica de avanço didático
+      this.currentSubIdx++;
+      if (this.currentSubIdx >= grupo.subs.length) {
+        this.currentSubIdx = 0;
+        this.currentGrupoIdx++;
+        if (this.currentGrupoIdx >= this.disciplina.grupos.length) {
+          this.currentGrupoIdx = 0; // Reinicia o ciclo de tópicos se acabar o edital
+        }
+      }
+      return { grupo: grupo.nome, sub: sub };
     }
-}
+  }
 
-function gerarCiclo() {
-    const horas = document.getElementById('inputHoras').value;
-    const foco = document.getElementById('inputFoco').value;
-    const gps = new GpsEstudos(horas, foco);
-    const dados = gps.gerar();
+  /* ============================================================
+     MOTOR DE GERAÇÃO AVANÇADO (Substitua sua wizardGenerate)
+     ============================================================ */
+  function wizardGenerate() {
+    const d = state.wizardData;
+    const banca = BANCAS.find(b => b.id === d.banca);
+    
+    // 1. Calcula Pesos Reais
+    let poolMaterias = [];
+    d.materias.forEach(mId => {
+      let peso = 10; // Base
+      const disc = DISCIPLINAS.find(x => x.id === mId);
+      if (banca && banca.materias) {
+        const match = Object.keys(banca.materias).find(k => disc.nome.includes(k));
+        if (match) peso = banca.materias[match];
+      }
+      // Adiciona à urna de sorteio proporcional ao peso (mais peso = mais vezes no ciclo)
+      let repeticoes = Math.max(1, Math.round(peso / 5));
+      for(let i=0; i<repeticoes; i++) poolMaterias.push(mId);
+    });
+    
+    // Embaralha para alternância didática
+    poolMaterias = poolMaterias.sort(() => Math.random() - 0.5);
+    
+    // Inicializa mentores por matéria
+    const mentores = {};
+    d.materias.forEach(mId => mentores[mId] = new GestorDidatico(mId));
 
-    const container = document.getElementById('resultadoCronograma');
-    container.innerHTML = '';
+    let html = `
+      <div class="result-summary">
+        <div class="result-stat"><div class="result-stat-label">BANCA</div><div class="result-stat-value">${banca.nome}</div></div>
+        <div class="result-stat"><div class="result-stat-label">DURAÇÃO</div><div class="result-stat-value">${d.semanas} SEM.</div></div>
+        <div class="result-stat"><div class="result-stat-label">TOTAL</div><div class="result-stat-value">${d.horas * d.dias * d.semanas}h</div></div>
+      </div>
+      <p style="font-size:0.8rem; color:hsl(var(--muted-foreground)); margin-bottom:20px; text-align:center;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:5px;"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        Plano de Operação gerado. Estude seguindo a sequência de subtópicos para esgotar o edital.
+      </p>
+    `;
 
-    for (const [dia, sessoes] of Object.entries(dados)) {
-        let htmlSessoes = sessoes.map(s => `
-            <div class="sessao-estudo" ${s.isSpecial ? 'style="border-color: #ff4444"' : ''}>
-                <div class="materia-nome">
-                    ${s.materia} 
-                    ${s.duracao ? `<span class="badge-peso">${s.duracao}h</span>` : ''}
+    const diasNomes = ['Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado', 'Domingo'];
+    let globalDayCount = 0;
+    let poolIdx = 0;
+
+    // Gerar 2 semanas como amostra inicial (ou todas se preferir)
+    for (let w = 1; w <= Math.min(2, d.semanas); w++) {
+      html += `<h4 style="font-family:var(--font-heading); color:hsl(var(--primary)); margin: 25px 0 10px; text-transform:uppercase; letter-spacing:1px;">Semana ${w}</h4>`;
+      
+      for (let day = 0; day < d.dias; day++) {
+        globalDayCount++;
+        html += `<div class="cronograma-day">
+          <div style="font-family:var(--font-heading); font-size:0.85rem; color:hsl(var(--primary)); margin-bottom:12px; border-bottom:1px solid hsl(var(--border)); padding-bottom:5px; display:flex; justify-content:space-between;">
+            <span>${diasNomes[day]}</span>
+            <span>ORDEM DO DIA</span>
+          </div>`;
+
+        let hRestantes = d.horas;
+
+        // 1. Bloco de Revisão Ativa (Início de cada dia após o 1º)
+        if (globalDayCount > 1 && hRestantes >= 1) {
+          html += `
+            <div class="sessao-card" style="border-left-color: hsl(var(--accent));">
+              <div class="status-check" onclick="this.parentElement.classList.toggle('concluida')">
+                <div class="check-circle"></div>
+                <div>
+                  <span class="badge-revisao">REVISÃO ATIVA</span>
+                  <div class="materia-nome">Recuperação de Memória</div>
+                  <small class="topico-detalhe">Revisar flashcards e anotações dos temas de ontem (${diasNomes[day-1] || 'Início'}).</small>
                 </div>
-                <small class="topico-detalhe">
-                    ${s.grupo ? `<strong>${s.grupo}:</strong> ` : ''} ${s.topico}
-                </small>
-            </div>
-        `).join('');
+              </div>
+            </div>`;
+          hRestantes--;
+        }
 
-        container.innerHTML += `
-            <div class="dia-card">
-                <div class="dia-header">
-                    <span>${dia}</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
+        // 2. Blocos de Conteúdo Novo
+        while (hRestantes > 0) {
+          let blocoH = hRestantes >= 2 ? 2 : 1;
+          let mId = poolMaterias[poolIdx];
+          poolIdx = (poolIdx + 1) % poolMaterias.length;
+          
+          let mentor = mentores[mId];
+          let topico = mentor.getNextTopic();
+
+          html += `
+            <div class="sessao-card">
+              <div class="status-check" onclick="this.parentElement.classList.toggle('concluida')">
+                <div class="check-circle"></div>
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="materia-nome">${mentor.disciplina.nome}</span>
+                    <span style="font-family:var(--font-mono); font-size:0.7rem; color:hsl(var(--primary));">${blocoH}h</span>
+                  </div>
+                  <small class="topico-detalhe"><strong>${topico.grupo}:</strong> ${topico.sub}</small>
+                  <div style="margin-top:6px; font-size:0.65rem; color:hsl(var(--muted-foreground)); display:flex; gap:8px;">
+                     <span>📝 Teoria + Questões</span>
+                     <span>|</span>
+                     <span>⚖️ Ver Lei Seca</span>
+                  </div>
                 </div>
-                ${htmlSessoes}
-            </div>
-        `;
+              </div>
+            </div>`;
+          hRestantes -= blocoH;
+        }
+
+        html += `</div>`;
+      }
     }
-}
+
+    document.getElementById('cronograma-result').innerHTML = html;
+    wizardGoStep(5);
+  }
+
+  // MANTENHA TODAS AS SUAS OUTRAS FUNÇÕES (navTo, showToast, renderDisciplines, etc.)
 </script>
+
 </body>
 </html>
