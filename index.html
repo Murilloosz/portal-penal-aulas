@@ -793,111 +793,159 @@
   .chart-wrap { height: 280px; position: relative; }
 
   /* ===== CRONOGRAMA WIZARD ===== */
-  .wizard-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    width: 44px; height: 44px;
-    background: hsl(var(--accent) / .15);
-    border: 1px solid hsl(var(--accent) / .3);
-    border-radius: var(--radius);
-    color: hsl(var(--accent));
-    cursor: pointer;
-    margin-right: 4px;
-    transition: all .15s;
-    justify-content: center;
-  }
-  .wizard-back:hover { background: hsl(var(--accent) / .25); }
-  .wizard-back svg { width: 20px; height: 20px; }
+  /* ===========================================
+     CRONOGRAMA WIZARD — VERSÃO MELHORADA
+     =========================================== */
 
-  .wizard-steps {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    padding: 20px 0;
-    margin-bottom: 24px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .wizard-steps::-webkit-scrollbar { display: none; }
-  .wizard-step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-  .wizard-step-num {
-    width: 28px; height: 28px;
-    border-radius: var(--radius);
-    background: hsl(var(--muted));
-    border: 1px solid hsl(var(--border));
-    color: hsl(var(--muted-foreground));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: .85rem;
-    transition: all .2s;
-  }
-  .wizard-step-label {
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: hsl(var(--muted-foreground));
-    transition: color .2s;
-  }
-  .wizard-step.active .wizard-step-num {
-    background: hsl(var(--primary) / .2);
-    border-color: hsl(var(--primary));
-    color: hsl(var(--primary));
-  }
-  .wizard-step.active .wizard-step-label {
-    color: hsl(var(--primary));
-  }
-  .wizard-step.done .wizard-step-num {
-    background: hsl(var(--primary));
-    border-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-  }
-  .wizard-step.done .wizard-step-label { color: hsl(var(--foreground)); }
-  .wizard-connector {
-    flex: 1;
-    min-width: 30px;
-    height: 1px;
-    background: hsl(var(--border));
-    margin: 0 14px;
+function updateTotalHours() {
+  const horas = parseInt(document.getElementById('horas-range').value);
+  const dias = parseInt(document.getElementById('dias-range').value);
+  const semanas = parseInt(document.getElementById('semanas-range').value);
+
+  document.getElementById('horas-value').textContent = horas;
+  document.getElementById('dias-value').textContent = dias;
+  document.getElementById('semanas-value').textContent = semanas;
+
+  const totalHoras = horas * dias * semanas;
+  const totalDias = Math.round(totalHoras / horas);
+
+  document.getElementById('total-horas-preview').textContent = totalHoras + ' horas';
+  document.getElementById('total-dias-preview').textContent = totalDias;
+}
+
+function renderWizardBancas() {
+  // (mantido igual ao seu original - só adicionei small visual fix)
+  const list = document.getElementById('wizard-bancas-list');
+  list.innerHTML = `
+    <div class="banca-option ${state.wizardData.banca === 'custom' ? 'selected' : ''}" onclick="selectBanca('custom')">
+      <div class="banca-option-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <div class="banca-option-info">
+        <div class="banca-option-title">Personalizado (sem banca)</div>
+        <div class="banca-option-sub">Monte livremente sem perfil de banca</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      ${BANCAS.map(b => {
+        const top3 = Object.entries(b.materias).slice(0, 3);
+        return `
+          <div class="banca-option ${state.wizardData.banca === b.id ? 'selected' : ''}" onclick="selectBanca('${b.id}')">
+            <div class="banca-option-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+            <div class="banca-option-info">
+              <div class="banca-option-title">${b.nome}</div>
+              <div class="banca-option-sub">${b.nomeFull}</div>
+              <div class="banca-option-top">
+                ${top3.map(([mat, pct]) => `<span class="material-chip">${mat} ${pct}%</span>`).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderRevisao() {
+  const d = state.wizardData;
+  const bancaNome = d.banca === 'custom' ? 'Personalizado' : (BANCAS.find(b => b.id === d.banca)?.nome || '—');
+  const materiasSelecionadas = d.materias.map(id => DISCIPLINAS.find(x => x.id === id)).filter(Boolean);
+
+  let html = `
+    <div class="result-summary">
+      <div class="result-stat"><div class="result-stat-label">BANCA</div><div class="result-stat-value">${bancaNome}</div></div>
+      <div class="result-stat"><div class="result-stat-label">MATÉRIAS</div><div class="result-stat-value">${materiasSelecionadas.length}</div></div>
+      <div class="result-stat"><div class="result-stat-label">HORAS/DIA</div><div class="result-stat-value">${d.horas}h</div></div>
+      <div class="result-stat"><div class="result-stat-label">DIAS/SEMANA</div><div class="result-stat-value">${d.dias}</div></div>
+      <div class="result-stat"><div class="result-stat-label">SEMANAS</div><div class="result-stat-value">${d.semanas}</div></div>
+      <div class="result-stat"><div class="result-stat-label">TOTAL DE HORAS</div><div class="result-stat-value">${d.horas * d.dias * d.semanas}h</div></div>
+    </div>
+
+    <h4 style="margin:24px 0 12px; font-family:var(--font-heading); letter-spacing:1.5px; text-transform:uppercase; color:hsl(var(--accent));">Distribuição de Horas</h4>
+  `;
+
+  materiasSelecionadas.forEach(m => {
+    const peso = m.editais;
+    const horasPorMateria = Math.round((peso / 100) * (d.horas * d.dias * d.semanas));
+    html += `
+      <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid hsl(var(--border)/.3);">
+        <span>${m.nome}</span>
+        <span style="font-family:var(--font-heading); color:hsl(var(--accent));">${horasPorMateria}h</span>
+      </div>
+    `;
+  });
+
+  document.getElementById('revisao-content').innerHTML = html;
+}
+
+function wizardGenerate() {
+  const d = state.wizardData;
+  const materias = d.materias.map(id => DISCIPLINAS.find(x => x.id === id)).filter(Boolean);
+
+  const weeks = [];
+  const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+
+  for (let w = 1; w <= Math.min(4, d.semanas); w++) {
+    const days = [];
+    for (let day = 0; day < d.dias; day++) {
+      const matIdx = (w * 7 + day) % materias.length;
+      const m = materias[matIdx];
+      const grupo = m.grupos[(w + day) % m.grupos.length];
+      const sub = grupo.subs[(w + day) % grupo.subs.length];
+
+      days.push({
+        day: dayNames[day],
+        materia: m.nome,
+        grupo: grupo.nome,
+        topico: sub,
+        horas: d.horas
+      });
+    }
+    weeks.push({ num: w, days });
   }
 
-  .wizard-panel {
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    padding: 28px;
-  }
-  .wizard-panel-header {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    margin-bottom: 22px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid hsl(var(--border) / .4);
-  }
-  .wizard-panel-header .section-icon { margin: 0; }
-  .wizard-panel-header h3 {
-    font-family: var(--font-heading);
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-  }
-  .wizard-panel-header p {
-    font-size: .82rem;
-    color: hsl(var(--muted-foreground));
-    margin-top: 2px;
-  }
+  const bancaNome = d.banca === 'custom' ? 'Personalizado' : (BANCAS.find(b => b.id === d.banca)?.nome || '—');
+
+  let html = `
+    <div class="result-summary">
+      <div class="result-stat"><div class="result-stat-label">BANCA</div><div class="result-stat-value">${bancaNome}</div></div>
+      <div class="result-stat"><div class="result-stat-label">TOTAL HORAS</div><div class="result-stat-value">${d.horas * d.dias * d.semanas}h</div></div>
+      <div class="result-stat"><div class="result-stat-label">MATÉRIAS</div><div class="result-stat-value">${materias.length}</div></div>
+      <div class="result-stat"><div class="result-stat-label">SEMANAS</div><div class="result-stat-value">${d.semanas}</div></div>
+    </div>
+
+    <p style="color:hsl(var(--muted-foreground)); margin:16px 0 20px;">Primeiras 4 semanas • Distribuição inteligente por frequência</p>
+  `;
+
+  weeks.forEach(wk => {
+    html += `<div class="cronograma-week"><h4>Semana ${wk.num}</h4>`;
+    wk.days.forEach(day => {
+      html += `
+        <div class="cronograma-day">
+          <span class="cronograma-day-label">${day.day}</span>
+          <div class="cronograma-day-subject">
+            <strong>${day.materia}</strong>
+            <span style="color:hsl(var(--accent));font-size:.78rem;margin-left:8px;">${day.grupo}</span>
+            <div style="color:hsl(var(--muted-foreground));font-size:.8rem;margin-top:4px;">${day.topico}</div>
+          </div>
+          <span class="cronograma-day-hours">${day.horas}h</span>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  });
+
+  document.getElementById('cronograma-result').innerHTML = html;
+  wizardGoStep(5);
+}
+
+// As demais funções (wizardNext, wizardPrev, wizardGoStep, wizardReset, saveCronograma, etc.) permanecem exatamente iguais às suas.
+
+function selectBanca(id) { state.wizardData.banca = id; renderWizardBancas(); }
+function toggleMateria(id) {
+  const idx = state.wizardData.materias.indexOf(id);
+  if (idx === -1) state.wizardData.materias.push(id);
+  else state.wizardData.materias.splice(idx, 1);
+  renderWizardMaterias();
+}
 
   .banca-option {
     display: flex;
