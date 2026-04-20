@@ -9,6 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
+  /* ===========================================
+     VARIÁVEIS E TEMA (PALETA TÁTICA)
+     =========================================== */
   :root {
     --background: 200 22% 9%;
     --foreground: 45 25% 93%;
@@ -17,3864 +20,506 @@
     --primary: 80 45% 38%;
     --primary-foreground: 45 20% 97%;
     --secondary: 200 15% 19%;
-    --muted: 200 12% 17%;
-    --muted-foreground: 45 12% 65%;
-    --accent: 45 60% 50%;
-    --accent-foreground: 200 20% 8%;
-    --destructive: 0 65% 50%;
-    --border: 200 15% 20%;
-    --ring: 80 45% 35%;
-    --radius: 0.4rem;
-    --font-heading: "Oswald", "Rajdhani", sans-serif;
-    --font-body: "Inter", "Rajdhani", sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --muted: 200 15% 18%;
+    --muted-foreground: 200 10% 65%;
+    --accent: 35 80% 55%;
+    --accent-foreground: 45 20% 97%;
+    --border: 200 15% 18%;
+    --input: 200 15% 18%;
+    --ring: 80 45% 38%;
+    --radius: 0.5rem;
+    --font-heading: 'Oswald', sans-serif;
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'JetBrains+Mono', monospace;
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
   body {
-    font-family: var(--font-body);
-    background: hsl(var(--background));
+    background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    line-height: 1.65;
-    font-size: 15px;
+    font-family: var(--font-sans);
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-    position: relative;
     overflow-x: hidden;
   }
-  /* Tactical grid */
+
+  /* Grid de fundo tático */
   body::before {
-    content: '';
+    content: "";
     position: fixed;
-    inset: 0;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: radial-gradient(hsl(var(--primary) / 0.15) 1px, transparent 1px);
+    background-size: 24px 24px;
+    z-index: -1;
     pointer-events: none;
-    z-index: 0;
-    opacity: .035;
-    background-image:
-      linear-gradient(rgba(103,129,49,.4) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(103,129,49,.4) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-  body::after {
-    content: '';
-    position: fixed;
-    top: 15%; right: -15%;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, hsl(var(--primary) / .06), transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-    filter: blur(80px);
   }
 
-  ::selection { background: hsl(var(--accent) / .4); color: hsl(var(--foreground)); }
-  * { scrollbar-width: thin; scrollbar-color: hsl(var(--border)) transparent; }
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / .5); }
-
-  /* ===== NAV ===== */
-  .nav {
-    position: sticky; top: 0; z-index: 100;
-    background: hsl(var(--background) / .85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid hsl(var(--border) / .5);
-  }
-  .nav-inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 24px;
+  /* ===========================================
+     LAYOUT & NAVEGAÇÃO
+     =========================================== */
+  header {
     height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid hsl(var(--border));
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.5rem;
+    position: sticky; top: 0; z-index: 50;
   }
-  .logo-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: inherit;
-    flex-shrink: 0;
-  }
-  .logo-icon {
-    width: 40px; height: 40px;
-    background: hsl(var(--primary) / .2);
-    border: 1px solid hsl(var(--primary) / .4);
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: hsl(var(--primary));
-    transition: background .2s;
-  }
-  .logo-link:hover .logo-icon { background: hsl(var(--primary) / .3); }
-  .logo-text {
+  .logo {
     font-family: var(--font-heading);
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    line-height: 1;
+    font-size: 1.4rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; color: hsl(var(--primary));
+    display: flex; align-items: center; gap: 8px;
   }
-  .logo-text .accent { color: hsl(var(--accent)); }
-  .logo-sub {
-    font-family: var(--font-body);
-    font-size: .6rem;
-    color: hsl(var(--muted-foreground));
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-top: 2px;
+  .search-container {
+    position: relative; flex: 1; max-width: 400px; margin: 0 1rem;
   }
-  .nav-links {
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    flex: 1;
-    justify-content: center;
+  .search-input {
+    width: 100%; background: hsl(var(--muted)); border: 1px solid hsl(var(--border));
+    border-radius: var(--radius); padding: 0.5rem 1rem 0.5rem 2.2rem;
+    color: hsl(var(--foreground)); font-size: 0.85rem; transition: all 0.2s;
   }
-  .nav-links::-webkit-scrollbar { display: none; }
-  .nav-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    font-weight: 600;
-    color: hsl(var(--muted-foreground));
-    text-decoration: none;
-    border: 1px solid transparent;
-    border-radius: var(--radius);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    transition: all .15s;
-    white-space: nowrap;
-    cursor: pointer;
-    background: none;
-  }
-  .nav-link:hover {
-    color: hsl(var(--foreground));
-    background: hsl(var(--secondary));
-  }
-  .nav-link.active {
-    color: hsl(var(--primary));
-    background: hsl(var(--primary) / .2);
-    border-color: hsl(var(--primary) / .3);
-  }
-  .nav-link svg { width: 14px; height: 14px; }
-  .nav-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-left: 12px;
-    border-left: 1px solid hsl(var(--border) / .4);
-    flex-shrink: 0;
-  }
-  .nav-user-name {
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    color: hsl(var(--muted-foreground));
-    letter-spacing: 1px;
-  }
-  .nav-logout {
-    background: none;
-    border: none;
-    color: hsl(var(--muted-foreground));
-    padding: 6px 8px;
-    cursor: pointer;
-    border-radius: var(--radius);
-    transition: all .15s;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-family: var(--font-heading);
-    font-size: .7rem;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-  }
-  .nav-logout:hover {
-    color: hsl(0 70% 70%);
-    background: hsl(var(--destructive) / .1);
-  }
+  .search-input:focus { border-color: hsl(var(--primary)); box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2); }
+  .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: hsl(var(--muted-foreground)); pointer-events: none; }
 
-  /* ===== PAGES ===== */
-  main { position: relative; z-index: 1; }
-  .page { display: none; animation: fadeIn .35s ease; }
+  nav.bottom-nav {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    height: 64px; background: hsl(var(--card));
+    border-top: 1px solid hsl(var(--border));
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 0 0.5rem; z-index: 50;
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    color: hsl(var(--muted-foreground)); text-decoration: none; font-size: 0.65rem;
+    font-weight: 600; text-transform: uppercase; cursor: pointer;
+    transition: color 0.2s; padding: 8px;
+  }
+  .nav-item.active { color: hsl(var(--primary)); }
+  .nav-item svg { width: 22px; height: 22px; }
+
+  /* ===========================================
+     PÁGINAS E SEÇÕES
+     =========================================== */
+  main { padding: 1.5rem; padding-bottom: 80px; max-width: 1200px; margin: 0 auto; }
+  .page { display: none; animation: fadeIn 0.3s ease; }
   .page.active { display: block; }
+
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-  .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+  .section-title { font-family: var(--font-heading); font-size: 1.8rem; text-transform: uppercase; margin-bottom: 1rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
 
-  /* ===== HERO (BASE) ===== */
-  .hero {
-    position: relative;
-    padding: 80px 24px 60px;
-    text-align: center;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, hsl(var(--primary) / .08), transparent 70%);
-    filter: blur(60px);
-    pointer-events: none;
-  }
-  .hero-inner { position: relative; max-width: 900px; margin: 0 auto; }
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 16px;
-    background: hsl(var(--accent) / .12);
-    border: 1px solid hsl(var(--accent) / .3);
-    border-radius: 999px;
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    font-weight: 600;
-    color: hsl(var(--accent));
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-  .hero h1 {
-    font-family: var(--font-heading);
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -1px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-  }
-  .hero h1 .line1 { color: hsl(var(--foreground)); display: block; }
-  .hero h1 .line2 { color: hsl(var(--primary)); display: block; }
-  .hero h1 .line3 { color: hsl(var(--accent)); display: block; }
-  .hero p {
-    max-width: 620px;
-    margin: 0 auto 32px;
-    color: hsl(var(--muted-foreground));
-    font-size: 1.05rem;
-    line-height: 1.6;
-  }
-  .hero-cta {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+  /* Cards */
+  .card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: var(--radius); padding: 1.5rem; position: relative; overflow: hidden; }
+  .card-header { margin-bottom: 1rem; }
+  .card-title { font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600; text-transform: uppercase; }
+
+  /* ===========================================
+     WIZARD DE CRONOGRAMA
+     =========================================== */
+  .wizard-container { max-width: 600px; margin: 0 auto; }
+  .wizard-step { display: none; }
+  .wizard-step.active { display: block; }
+  .wizard-actions { display: flex; justify-content: space-between; margin-top: 2rem; }
+  
   .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    font-family: var(--font-heading);
-    font-size: .85rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    border-radius: var(--radius);
-    border: none;
-    cursor: pointer;
-    transition: all .2s;
-    text-decoration: none;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.75rem 1.5rem; border-radius: var(--radius);
+    font-weight: 600; font-family: var(--font-heading); text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s; border: none; gap: 8px;
   }
-  .btn svg { width: 16px; height: 16px; }
-  .btn-primary {
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-  }
-  .btn-primary:hover {
-    background: hsl(var(--primary) / .85);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px hsl(var(--primary) / .3);
-  }
-  .btn-outline {
-    background: transparent;
-    color: hsl(var(--foreground));
-    border: 1px solid hsl(var(--border));
-  }
-  .btn-outline:hover {
-    background: hsl(var(--secondary));
-    border-color: hsl(var(--primary) / .4);
-  }
-  .btn-accent {
-    background: hsl(var(--accent) / .15);
-    color: hsl(var(--accent));
-    border: 1px solid hsl(var(--accent) / .3);
-  }
-  .btn-accent:hover {
-    background: hsl(var(--accent) / .25);
-  }
+  .btn-primary { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-secondary { background: hsl(var(--secondary)); color: hsl(var(--foreground)); border: 1px solid hsl(var(--border)); }
 
-  .hero-tiles {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    max-width: 720px;
-    margin: 40px auto 0;
-  }
-  .hero-tile {
-    padding: 16px;
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .4);
-    border-radius: var(--radius);
-    text-align: center;
-    cursor: pointer;
-    transition: all .2s;
-    text-decoration: none;
-    color: inherit;
-  }
-  .hero-tile:hover {
-    background: hsl(var(--card));
-    border-color: hsl(var(--primary) / .3);
-  }
-  .hero-tile-icon {
-    width: 36px; height: 36px;
-    background: hsl(var(--primary) / .1);
-    border: 1px solid hsl(var(--primary) / .2);
-    border-radius: var(--radius);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: hsl(var(--primary));
-    margin-bottom: 8px;
-  }
-  .hero-tile-icon svg { width: 16px; height: 16px; }
-  .hero-tile h4 {
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-  }
-  .hero-tile p {
-    font-size: .65rem;
-    color: hsl(var(--muted-foreground));
-    margin: 0;
-  }
-
-  /* Section headers */
-  .section {
-    padding: 56px 24px;
-    border-top: 1px solid hsl(var(--border) / .3);
-  }
-  .section-inner { max-width: 1280px; margin: 0 auto; }
-  .section-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-  }
-  .section-header > div:not(.section-icon):not(.section-header-actions) {
-    flex: 1;
-    min-width: 0;
-    padding-top: 4px;
-  }
-  .section-icon {
-    width: 44px; height: 44px;
-    background: hsl(var(--accent) / .15);
-    border: 1px solid hsl(var(--accent) / .3);
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: hsl(var(--accent));
-    flex-shrink: 0;
-  }
-  .section-icon.primary {
-    background: hsl(var(--primary) / .15);
-    border-color: hsl(var(--primary) / .3);
-    color: hsl(var(--primary));
-  }
-  .section-icon svg { width: 22px; height: 22px; }
-  .section-title {
-    font-family: var(--font-heading);
-    font-size: clamp(1.4rem, 3vw, 1.9rem);
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    line-height: 1.1;
-  }
-  .section-title .accent { color: hsl(var(--accent)); }
-  .section-title .primary { color: hsl(var(--primary)); }
-  .section-subtitle {
-    font-size: .85rem;
-    color: hsl(var(--muted-foreground));
-    margin-top: 6px;
-    line-height: 1.5;
-  }
-  .section-header-actions { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
-
-  /* Stats pills */
-  .stats-pills {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
-  }
-  .stat-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    font-size: .82rem;
-  }
-  .stat-pill svg { width: 16px; height: 16px; color: hsl(var(--accent)); }
-  .stat-pill strong {
-    font-family: var(--font-heading);
-    color: hsl(var(--accent));
-    font-size: 1rem;
-    letter-spacing: 1px;
-  }
-  .stat-pill .stat-label {
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    color: hsl(var(--muted-foreground));
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-  }
-
-  /* Plano de Operação cards */
-  .operacao-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-  }
-  .op-card {
-    position: relative;
-    padding: 24px;
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    transition: all .2s;
-    overflow: hidden;
-  }
-  .op-card:hover {
-    border-color: hsl(var(--primary) / .4);
-    background: hsl(var(--card));
-  }
-  .op-card-num {
-    position: absolute;
-    top: 12px; right: 16px;
-    font-family: var(--font-heading);
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: hsl(var(--primary) / .1);
-    line-height: 1;
-    transition: color .2s;
-  }
-  .op-card:hover .op-card-num { color: hsl(var(--primary) / .2); }
-  .op-card-icon {
-    width: 42px; height: 42px;
-    background: hsl(var(--primary) / .1);
-    border: 1px solid hsl(var(--primary) / .2);
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: hsl(var(--primary));
-    margin-bottom: 14px;
-  }
-  .op-card-icon svg { width: 22px; height: 22px; }
-  .op-card h3 {
-    font-family: var(--font-heading);
-    font-size: .85rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .op-card p {
-    font-size: .85rem;
-    color: hsl(var(--muted-foreground));
-    line-height: 1.55;
-  }
-
-  /* ===== DIREITO PM ===== */
-  .search-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 18px;
-    background: hsl(var(--card));
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius);
-    margin-bottom: 18px;
-    transition: all .15s;
-  }
-  .search-bar:focus-within {
-    border-color: hsl(var(--primary) / .5);
-    box-shadow: 0 0 0 2px hsl(var(--primary) / .15);
-  }
-  .search-bar svg { width: 16px; height: 16px; color: hsl(var(--muted-foreground)); flex-shrink: 0; }
-  .search-bar input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-family: var(--font-body);
-    font-size: .92rem;
-    color: hsl(var(--foreground));
-  }
-  .search-bar input::placeholder { color: hsl(var(--muted-foreground)); }
-
-  .discipline-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .discipline-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 22px;
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all .15s;
-    text-decoration: none;
-    color: inherit;
-  }
-  .discipline-row:hover {
-    border-color: hsl(var(--primary) / .4);
-    background: hsl(var(--card));
-    transform: translateX(3px);
-  }
-  .discipline-icon {
-    width: 40px; height: 40px;
-    background: hsl(var(--muted));
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: hsl(var(--foreground));
-    flex-shrink: 0;
-  }
-  .discipline-icon svg { width: 20px; height: 20px; }
-  .discipline-info { flex: 1; min-width: 0; }
-  .discipline-title {
-    font-family: var(--font-heading);
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: .5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .discipline-percent {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 8px;
-    font-family: var(--font-heading);
-    font-size: .65rem;
-    font-weight: 700;
-    background: hsl(var(--primary) / .15);
-    color: hsl(var(--primary));
-    border: 1px solid hsl(var(--primary) / .3);
-    border-radius: 3px;
-    letter-spacing: .8px;
-    text-transform: uppercase;
-  }
-  .discipline-percent.mid {
-    background: hsl(var(--accent) / .15);
-    color: hsl(var(--accent));
-    border-color: hsl(var(--accent) / .3);
-  }
-  .discipline-percent.low {
-    background: hsl(var(--muted));
-    color: hsl(var(--muted-foreground));
-    border-color: hsl(var(--border));
-  }
-  .discipline-desc {
-    font-size: .85rem;
-    color: hsl(var(--muted-foreground));
-    margin-top: 4px;
-  }
-  .discipline-meta {
-    font-family: var(--font-body);
-    font-size: .8rem;
-    color: hsl(var(--muted-foreground));
-    white-space: nowrap;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  /* ===== BANCAS ===== */
-  .tabs {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 22px;
-    border-bottom: 1px solid hsl(var(--border) / .5);
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .tabs::-webkit-scrollbar { display: none; }
-  .tab-btn {
-    padding: 10px 18px;
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    color: hsl(var(--muted-foreground));
-    font-family: var(--font-heading);
-    font-size: .78rem;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all .15s;
-    white-space: nowrap;
-  }
-  .tab-btn:hover { color: hsl(var(--foreground)); }
-  .tab-btn.active {
-    color: hsl(var(--primary));
-    border-bottom-color: hsl(var(--primary));
-  }
-
-  .bancas-filters {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-  }
-  .banca-filter {
-    padding: 6px 14px;
-    background: hsl(var(--card) / .5);
-    border: 1px solid hsl(var(--border) / .4);
-    color: hsl(var(--muted-foreground));
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .banca-filter:hover {
-    color: hsl(var(--foreground));
-    border-color: hsl(var(--border));
-  }
-  .banca-filter.active {
-    background: hsl(var(--primary) / .2);
-    color: hsl(var(--primary));
-    border-color: hsl(var(--primary) / .4);
-  }
-
-  .bancas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-  }
-  .banca-card {
-    padding: 18px 20px;
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    transition: all .2s;
-    cursor: pointer;
-  }
-  .banca-card:hover {
-    border-color: hsl(var(--primary) / .4);
-    background: hsl(var(--card));
-  }
-  .banca-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 6px;
-  }
-  .banca-card h3 {
-    font-family: var(--font-heading);
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
-  .banca-tag {
-    padding: 3px 9px;
-    border-radius: 3px;
-    font-family: var(--font-heading);
-    font-size: .6rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    white-space: nowrap;
-    border: 1px solid;
-  }
-  .banca-tag.alta {
-    background: hsl(var(--destructive) / .2);
-    color: hsl(0 70% 70%);
-    border-color: hsl(var(--destructive) / .4);
-  }
-  .banca-tag.media-alta {
-    background: hsl(var(--primary) / .15);
-    color: hsl(var(--primary));
-    border-color: hsl(var(--primary) / .3);
-  }
-  .banca-tag.media {
-    background: hsl(var(--accent) / .15);
-    color: hsl(var(--accent));
-    border-color: hsl(var(--accent) / .3);
-  }
-  .banca-full {
-    font-size: .85rem;
-    color: hsl(var(--muted-foreground));
-    line-height: 1.4;
-    margin-bottom: 12px;
-  }
-  .banca-estados {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-bottom: 12px;
-  }
-  .banca-estado {
-    padding: 2px 7px;
-    background: hsl(var(--muted));
-    border: 1px solid hsl(var(--border));
-    border-radius: 3px;
-    font-family: var(--font-mono);
-    font-size: .66rem;
-    color: hsl(var(--muted-foreground));
-    letter-spacing: .3px;
-  }
-  .banca-top {
-    font-size: .78rem;
-    color: hsl(var(--muted-foreground));
-  }
-  .banca-top strong {
-    color: hsl(var(--foreground));
-    font-weight: 600;
-  }
-
-  /* Charts row */
-  .charts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-  .chart-card {
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    padding: 20px 22px;
-  }
-  .chart-card-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-heading);
-    font-size: .85rem;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 18px;
-    color: hsl(var(--foreground));
-  }
-  .chart-card-title svg { width: 16px; height: 16px; color: hsl(var(--accent)); }
-  .chart-wrap { height: 280px; position: relative; }
-
-  /* ===== CRONOGRAMA WIZARD ===== */
-  .wizard-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    width: 44px; height: 44px;
-    background: hsl(var(--accent) / .15);
-    border: 1px solid hsl(var(--accent) / .3);
-    border-radius: var(--radius);
-    color: hsl(var(--accent));
-    cursor: pointer;
-    margin-right: 4px;
-    transition: all .15s;
-    justify-content: center;
-  }
-  .wizard-back:hover { background: hsl(var(--accent) / .25); }
-  .wizard-back svg { width: 20px; height: 20px; }
-
-  .wizard-steps {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    padding: 20px 0;
-    margin-bottom: 24px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .wizard-steps::-webkit-scrollbar { display: none; }
-  .wizard-step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-  .wizard-step-num {
-    width: 28px; height: 28px;
-    border-radius: var(--radius);
-    background: hsl(var(--muted));
-    border: 1px solid hsl(var(--border));
-    color: hsl(var(--muted-foreground));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: .85rem;
-    transition: all .2s;
-  }
-  .wizard-step-label {
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: hsl(var(--muted-foreground));
-    transition: color .2s;
-  }
-  .wizard-step.active .wizard-step-num {
-    background: hsl(var(--primary) / .2);
-    border-color: hsl(var(--primary));
-    color: hsl(var(--primary));
-  }
-  .wizard-step.active .wizard-step-label {
-    color: hsl(var(--primary));
-  }
-  .wizard-step.done .wizard-step-num {
-    background: hsl(var(--primary));
-    border-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-  }
-  .wizard-step.done .wizard-step-label { color: hsl(var(--foreground)); }
-  .wizard-connector {
-    flex: 1;
-    min-width: 30px;
-    height: 1px;
-    background: hsl(var(--border));
-    margin: 0 14px;
-  }
-
-  .wizard-panel {
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    padding: 28px;
-  }
-  .wizard-panel-header {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    margin-bottom: 22px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid hsl(var(--border) / .4);
-  }
-  .wizard-panel-header .section-icon { margin: 0; }
-  .wizard-panel-header h3 {
-    font-family: var(--font-heading);
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-  }
-  .wizard-panel-header p {
-    font-size: .82rem;
-    color: hsl(var(--muted-foreground));
-    margin-top: 2px;
-  }
-
-  .banca-option {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 16px;
-    background: hsl(var(--muted) / .4);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all .15s;
-    margin-bottom: 10px;
-  }
-  .banca-option:hover {
-    background: hsl(var(--muted));
-    border-color: hsl(var(--border));
-  }
-  .banca-option.selected {
-    background: hsl(var(--primary) / .1);
-    border-color: hsl(var(--primary));
-  }
-  .banca-option-check {
-    width: 20px; height: 20px;
-    border: 1.5px solid hsl(var(--border));
-    border-radius: 4px;
-    flex-shrink: 0;
-    margin-top: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .15s;
-  }
-  .banca-option.selected .banca-option-check {
-    background: hsl(var(--primary));
-    border-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-  }
-  .banca-option-check svg { width: 14px; height: 14px; opacity: 0; }
-  .banca-option.selected .banca-option-check svg { opacity: 1; }
-  .banca-option-info { flex: 1; min-width: 0; }
-  .banca-option-title {
-    font-family: var(--font-heading);
-    font-size: .95rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-  .banca-option-sub {
-    font-size: .8rem;
-    color: hsl(var(--muted-foreground));
-    margin: 2px 0 8px;
-  }
-  .banca-option-top {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .banca-option-top .material-chip {
-    padding: 2px 8px;
-    background: hsl(var(--background) / .5);
-    border: 1px solid hsl(var(--border));
-    border-radius: 3px;
-    font-size: .68rem;
-    color: hsl(var(--muted-foreground));
-  }
-
-  .grid-2 {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 10px;
-  }
-
-  .wizard-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid hsl(var(--border) / .4);
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  /* ===== ANÁLISE (upload) ===== */
-  .analise-card {
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    padding: 28px;
-  }
-  .analise-card-header {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    margin-bottom: 22px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid hsl(var(--border) / .4);
-  }
-  .field-label {
-    display: block;
-    font-family: var(--font-heading);
-    font-size: .75rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: hsl(var(--muted-foreground));
-    margin-bottom: 8px;
-  }
-  .upload-box {
-    padding: 32px;
-    background: hsl(var(--muted) / .3);
-    border: 1.5px dashed hsl(var(--primary) / .4);
-    border-radius: var(--radius);
-    text-align: center;
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .upload-box:hover {
-    background: hsl(var(--muted) / .5);
-    border-color: hsl(var(--primary));
-  }
-  .upload-box svg { width: 28px; height: 28px; color: hsl(var(--muted-foreground)); margin-bottom: 8px; }
-  .upload-box-text {
-    font-family: var(--font-body);
-    font-size: .9rem;
-    color: hsl(var(--muted-foreground));
-  }
-  .divider-or {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 20px 0;
-    color: hsl(var(--muted-foreground));
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    letter-spacing: 2px;
-  }
-  .divider-or::before, .divider-or::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: hsl(var(--border));
-  }
-  textarea {
-    width: 100%;
-    padding: 14px 16px;
-    background: hsl(var(--muted) / .4);
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius);
-    font-family: var(--font-body);
-    font-size: .92rem;
-    color: hsl(var(--foreground));
-    resize: vertical;
-    min-height: 140px;
-    transition: all .15s;
-  }
-  textarea:focus {
-    outline: none;
-    border-color: hsl(var(--primary) / .6);
-    box-shadow: 0 0 0 2px hsl(var(--primary) / .15);
-  }
-  textarea::placeholder { color: hsl(var(--muted-foreground)); }
-
-  .slider-row {
-    margin: 20px 0;
-  }
-  .slider-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  .slider-top .field-label { margin-bottom: 0; }
-  .slider-value {
-    font-family: var(--font-heading);
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: hsl(var(--accent));
-    letter-spacing: 1px;
-  }
-  input[type="range"] {
-    width: 100%;
-    -webkit-appearance: none;
-    height: 6px;
-    background: hsl(var(--muted));
-    border-radius: 3px;
-    outline: none;
-  }
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: hsl(var(--primary));
-    border: 2px solid hsl(var(--background));
-    cursor: pointer;
-    box-shadow: 0 0 0 1px hsl(var(--primary));
-  }
-  input[type="range"]::-moz-range-thumb {
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: hsl(var(--primary));
-    border: 2px solid hsl(var(--background));
-    cursor: pointer;
-    box-shadow: 0 0 0 1px hsl(var(--primary));
-  }
-  .slider-range {
-    display: flex;
-    justify-content: space-between;
-    font-family: var(--font-heading);
-    font-size: .7rem;
-    color: hsl(var(--muted-foreground));
-    margin-top: 4px;
-    letter-spacing: 1px;
-  }
-
-  .btn-iniciar {
-    width: 100%;
-    padding: 16px;
-    margin-top: 14px;
-    font-size: .9rem;
-    justify-content: center;
-  }
-
-  /* ===== HISTÓRICO ===== */
-  .historico-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .hist-item {
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    transition: all .15s;
-  }
-  .hist-item:hover { border-color: hsl(var(--border)); background: hsl(var(--card)); }
-  .hist-icon {
-    width: 42px; height: 42px;
-    background: hsl(var(--primary) / .15);
-    border: 1px solid hsl(var(--primary) / .3);
-    border-radius: var(--radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: hsl(var(--primary));
-    flex-shrink: 0;
-  }
-  .hist-icon svg { width: 20px; height: 20px; }
-  .hist-info { flex: 1; min-width: 0; }
-  .hist-title {
-    font-family: var(--font-heading);
-    font-size: .95rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .hist-meta {
-    font-size: .8rem;
-    color: hsl(var(--muted-foreground));
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .hist-meta span { display: inline-flex; align-items: center; gap: 4px; }
-  .hist-action {
-    color: hsl(var(--accent));
-    text-decoration: none;
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    padding: 6px 10px;
-    border: 1px solid hsl(var(--accent) / .3);
-    border-radius: var(--radius);
-    transition: all .15s;
-    white-space: nowrap;
-  }
-  .hist-action:hover {
-    background: hsl(var(--accent) / .15);
-    border-color: hsl(var(--accent));
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    background: hsl(var(--card) / .3);
-    border: 1.5px dashed hsl(var(--border));
-    border-radius: var(--radius);
-  }
-  .empty-state svg {
-    width: 48px; height: 48px;
-    color: hsl(var(--muted-foreground));
-    opacity: .4;
-    margin-bottom: 14px;
-  }
-  .empty-state h4 {
-    font-family: var(--font-heading);
-    font-size: 1rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .empty-state p {
-    color: hsl(var(--muted-foreground));
-    font-size: .88rem;
-    max-width: 380px;
-    margin: 0 auto;
-  }
-
-  /* ===== PESQUISA ===== */
-  .pesquisa-results {
-    margin-top: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .pesq-result {
-    padding: 14px 18px;
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    transition: all .15s;
-    cursor: pointer;
-  }
-  .pesq-result:hover {
-    background: hsl(var(--card));
-    border-color: hsl(var(--primary) / .4);
-  }
-  .pesq-result-top {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 4px;
-  }
-  .pesq-result-type {
-    font-family: var(--font-heading);
-    font-size: .65rem;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    padding: 2px 8px;
-    border-radius: 3px;
-    background: hsl(var(--accent) / .15);
-    color: hsl(var(--accent));
-    border: 1px solid hsl(var(--accent) / .3);
-  }
-  .pesq-result-title {
-    font-family: var(--font-heading);
-    font-weight: 600;
-    letter-spacing: .5px;
-    font-size: .92rem;
-  }
-  .pesq-result-desc {
-    font-size: .82rem;
-    color: hsl(var(--muted-foreground));
-  }
-  .pesq-result mark {
-    background: hsl(var(--accent) / .3);
-    color: hsl(var(--accent));
-    padding: 0 2px;
-    border-radius: 2px;
-  }
-
-  /* ===== DISCIPLINE DETAIL ===== */
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: hsl(var(--muted-foreground));
-    font-family: var(--font-heading);
-    font-size: .8rem;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    text-decoration: none;
-    margin-bottom: 20px;
-    cursor: pointer;
-  }
-  .back-link:hover { color: hsl(var(--foreground)); }
-  .back-link svg { width: 16px; height: 16px; }
-
-  /* Grouped subtopics block (matches Base44's thematic organization) */
-  .grupo-block {
-    margin-bottom: 20px;
-    background: hsl(var(--card) / .45);
-    border: 1px solid hsl(var(--border) / .4);
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: border-color .2s;
-  }
-  .grupo-block:hover { border-color: hsl(var(--border)); }
-  .grupo-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    margin: 0;
-    background: linear-gradient(90deg, hsl(var(--accent) / .1), transparent 70%);
-    border-bottom: 1px solid hsl(var(--border) / .4);
-    font-family: var(--font-heading);
-    font-size: .88rem;
-    font-weight: 700;
-    letter-spacing: 1.4px;
-    text-transform: uppercase;
-    color: hsl(var(--foreground));
-    line-height: 1.3;
-  }
-  .grupo-num {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 30px;
-    height: 30px;
-    padding: 0 8px;
-    background: hsl(var(--accent) / .15);
-    border: 1px solid hsl(var(--accent) / .35);
-    border-radius: 4px;
-    color: hsl(var(--accent));
-    font-family: var(--font-mono);
-    font-size: .78rem;
-    font-weight: 600;
-    letter-spacing: 0;
-    flex-shrink: 0;
-  }
-  .grupo-name { flex: 1; min-width: 0; }
-  /* Per-group progress bar (inside grupo-title) */
-  .grupo-progress {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-  }
-  .grupo-progress .gp-text {
-    font-family: var(--font-mono);
-    font-size: .66rem;
-    font-weight: 600;
-    color: hsl(var(--muted-foreground));
-    letter-spacing: .3px;
-    text-transform: none;
-    min-width: 36px;
-    text-align: right;
-  }
-  .grupo-progress .gp-track {
-    width: 70px;
-    height: 4px;
-    background: hsl(var(--muted));
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .grupo-progress .gp-fill {
-    height: 100%;
-    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
-    border-radius: 2px;
-    transition: width .35s ease;
-  }
-  .grupo-subs {
-    padding: 4px 0;
-  }
-  .grupo-sub-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 11px 20px 11px 18px;
-    transition: background .12s, border-color .12s;
-    border-left: 2px solid transparent;
-    cursor: pointer;
-    user-select: none;
-  }
-  .grupo-sub-item:hover {
-    background: hsl(var(--primary) / .06);
-    border-left-color: hsl(var(--primary) / .6);
-  }
-  .grupo-sub-item + .grupo-sub-item {
-    border-top: 1px solid hsl(var(--border) / .25);
-  }
-  .grupo-sub-item.studied {
-    background: hsl(var(--primary) / .08);
-    border-left-color: hsl(var(--primary));
-  }
-  .grupo-sub-item.studied:hover {
-    background: hsl(var(--primary) / .14);
-  }
-  /* Checkbox icon */
-  .grupo-sub-check {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1px;
-    position: relative;
-  }
-  .grupo-sub-check svg {
-    width: 18px;
-    height: 18px;
-    position: absolute;
-    top: 0; left: 0;
-    transition: opacity .15s;
-  }
-  .grupo-sub-check .sc-empty {
-    color: hsl(var(--muted-foreground));
-    opacity: .55;
-  }
-  .grupo-sub-check .sc-done {
-    color: hsl(var(--primary));
-    opacity: 0;
-  }
-  .grupo-sub-item:hover .grupo-sub-check .sc-empty { opacity: .9; color: hsl(var(--primary)); }
-  .grupo-sub-item.studied .grupo-sub-check .sc-empty { opacity: 0; }
-  .grupo-sub-item.studied .grupo-sub-check .sc-done {
-    opacity: 1;
-    filter: drop-shadow(0 0 3px hsl(var(--primary) / .5));
-  }
-  .grupo-sub-text {
-    flex: 1;
-    font-family: var(--font-body);
-    font-size: .88rem;
-    line-height: 1.55;
-    color: hsl(var(--foreground) / .85);
-    transition: color .15s, text-decoration-color .15s;
-  }
-  .grupo-sub-item.studied .grupo-sub-text {
-    color: hsl(var(--muted-foreground));
-    text-decoration: line-through;
-    text-decoration-color: hsl(var(--primary) / .5);
-    text-decoration-thickness: 1px;
-  }
-  .grupo-sub-open {
-    opacity: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    margin-top: -1px;
-    border-radius: 3px;
-    background: hsl(var(--muted));
-    color: hsl(var(--muted-foreground));
-    transition: opacity .15s, background .15s, color .15s;
-    flex-shrink: 0;
-  }
-  .grupo-sub-open svg { width: 13px; height: 13px; }
-  .grupo-sub-item:hover .grupo-sub-open {
-    opacity: .9;
-  }
-  .grupo-sub-open:hover {
-    background: hsl(var(--accent));
-    color: hsl(var(--accent-foreground));
-  }
-
-  /* Overall discipline progress */
-  .disc-progress {
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-left: 3px solid hsl(var(--primary));
-    border-radius: var(--radius);
-    padding: 14px 18px;
-    margin-bottom: 16px;
-  }
-  .disc-progress-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .disc-progress-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-heading);
-    font-size: .78rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: hsl(var(--primary));
-  }
-  .disc-progress .gp-text {
-    font-family: var(--font-mono);
-    font-size: .78rem;
-    color: hsl(var(--foreground));
-    font-weight: 500;
-  }
-  .disc-progress .gp-track {
-    height: 6px;
-    background: hsl(var(--muted));
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .disc-progress .gp-fill {
-    height: 100%;
-    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
-    border-radius: 3px;
-    transition: width .35s ease;
-    box-shadow: 0 0 8px hsl(var(--primary) / .4);
-  }
-
-  /* Hint banner */
-  .hint-banner {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: hsl(var(--accent) / .08);
-    border: 1px solid hsl(var(--accent) / .2);
-    border-radius: var(--radius);
-    margin-bottom: 18px;
-    font-family: var(--font-body);
-    font-size: .8rem;
-    color: hsl(var(--foreground) / .85);
-  }
-  .hint-banner svg {
-    color: hsl(var(--accent));
-    flex-shrink: 0;
-  }
-  .hint-banner strong {
-    color: hsl(var(--accent));
-    font-weight: 700;
-  }
-
-  /* Study Modal */
-  .study-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: hsl(var(--background) / .8);
-    backdrop-filter: blur(8px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 500;
-    padding: 20px;
-    animation: fadeIn .2s ease;
-  }
-  .study-modal-backdrop.open { display: flex; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .study-modal {
-    background: hsl(var(--card));
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius);
-    max-width: 640px;
-    width: 100%;
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 30px 80px rgba(0,0,0,.55);
-    animation: modalSlide .3s cubic-bezier(.2,.9,.3,1.1);
-    overflow: hidden;
-  }
-  @keyframes modalSlide {
-    from { transform: translateY(24px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  .study-modal-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 20px;
-    background: linear-gradient(90deg, hsl(var(--primary) / .12), transparent 80%);
-    border-bottom: 1px solid hsl(var(--border) / .5);
-  }
-  .sm-head-icon {
-    width: 40px; height: 40px;
-    background: hsl(var(--primary) / .2);
-    border: 1px solid hsl(var(--primary) / .35);
-    border-radius: var(--radius);
-    color: hsl(var(--primary));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .sm-head-icon svg { width: 20px; height: 20px; }
-  .sm-head-text { flex: 1; min-width: 0; }
-  .sm-discipline {
-    font-family: var(--font-heading);
-    font-size: .7rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: hsl(var(--accent));
-    margin-bottom: 2px;
-  }
-  .sm-group {
-    font-family: var(--font-body);
-    font-size: .78rem;
-    color: hsl(var(--muted-foreground));
-  }
-  .sm-close {
-    width: 34px; height: 34px;
-    background: hsl(var(--muted));
-    border: 1px solid hsl(var(--border));
-    border-radius: var(--radius);
-    color: hsl(var(--muted-foreground));
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .15s;
-    flex-shrink: 0;
-  }
-  .sm-close:hover {
-    background: hsl(var(--destructive) / .2);
-    border-color: hsl(var(--destructive) / .4);
-    color: hsl(0 70% 75%);
-  }
-  .study-modal-body {
-    padding: 22px;
-    overflow-y: auto;
-    flex: 1;
-  }
-  .sm-title {
-    font-family: var(--font-heading);
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: .5px;
-    color: hsl(var(--foreground));
-    margin: 0 0 18px;
-    line-height: 1.3;
-    padding-bottom: 12px;
-    border-bottom: 1px solid hsl(var(--border) / .5);
-  }
-  .sm-section {
-    margin-bottom: 18px;
-  }
-  .sm-section h4 {
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: hsl(var(--accent));
-    margin: 0 0 8px;
-  }
-  .sm-section p {
-    font-size: .88rem;
-    line-height: 1.6;
-    color: hsl(var(--foreground) / .85);
-  }
-  .sm-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .sm-section ul li {
-    padding: 8px 0 8px 22px;
-    position: relative;
-    font-size: .87rem;
-    line-height: 1.55;
-    color: hsl(var(--foreground) / .85);
-    border-bottom: 1px solid hsl(var(--border) / .3);
-  }
-  .sm-section ul li:last-child { border-bottom: none; }
-  .sm-section ul li::before {
-    content: '';
-    position: absolute;
-    left: 4px; top: 15px;
-    width: 6px; height: 6px;
-    background: hsl(var(--accent));
-    border-radius: 50%;
-  }
-  .sm-section ul li strong { color: hsl(var(--foreground)); }
-  .sm-resources {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .sm-res {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: hsl(var(--muted) / .5);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    color: hsl(var(--foreground));
-    text-decoration: none;
-    font-family: var(--font-body);
-    font-size: .86rem;
-    transition: all .15s;
-  }
-  .sm-res:hover {
-    background: hsl(var(--primary) / .1);
-    border-color: hsl(var(--primary) / .4);
-    color: hsl(var(--primary));
-    transform: translateX(3px);
-  }
-  .sm-res svg {
-    color: hsl(var(--accent));
-    flex-shrink: 0;
-  }
-  .study-modal-footer {
-    padding: 14px 20px;
-    background: hsl(var(--muted) / .3);
-    border-top: 1px solid hsl(var(--border) / .5);
-  }
-  .sm-action {
-    width: 100%;
-    padding: 12px 18px;
-    background: hsl(var(--muted));
-    border: 1.5px solid hsl(var(--border));
-    border-radius: var(--radius);
-    color: hsl(var(--foreground));
-    font-family: var(--font-heading);
-    font-size: .85rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all .15s;
-  }
-  .sm-action:hover {
-    background: hsl(var(--primary) / .2);
-    border-color: hsl(var(--primary));
-    color: hsl(var(--primary));
-  }
-  .sm-action.studied {
-    background: hsl(var(--primary));
-    border-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-  }
-  .sm-action.studied:hover {
-    background: hsl(var(--primary) / .85);
-  }
-  .sm-action svg { width: 18px; height: 18px; }
-
-  @media (max-width: 600px) {
-    .grupo-title { padding: 12px 14px; font-size: .76rem; letter-spacing: 1.1px; gap: 10px; flex-wrap: wrap; }
-    .grupo-num { min-width: 26px; height: 26px; font-size: .72rem; }
-    .grupo-progress .gp-track { width: 50px; }
-    .grupo-progress .gp-text { font-size: .62rem; min-width: 30px; }
-    .grupo-sub-item { padding: 11px 14px 11px 14px; gap: 10px; }
-    .grupo-sub-text { font-size: .84rem; }
-    .grupo-sub-check { width: 18px; height: 18px; }
-    .grupo-sub-check svg { width: 16px; height: 16px; }
-    .grupo-sub-open { display: none; }
-    .hint-banner { font-size: .74rem; padding: 9px 12px; }
-    .study-modal-body { padding: 18px; }
-    .sm-title { font-size: 1rem; }
-  }
-
-  .topic-card {
-    padding: 16px 20px;
-    background: hsl(var(--card) / .6);
-    border: 1px solid hsl(var(--border) / .5);
-    border-left: 3px solid hsl(var(--accent));
-    border-radius: var(--radius);
-    margin-bottom: 10px;
-    transition: all .15s;
-  }
-  .topic-card:hover {
-    background: hsl(var(--card));
-    border-left-color: hsl(var(--primary));
-  }
-  .topic-card-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .topic-name {
-    font-family: var(--font-heading);
-    font-size: .9rem;
-    font-weight: 600;
-    letter-spacing: .5px;
-  }
-  .topic-freq {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-family: var(--font-heading);
-    font-size: .68rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 2px 8px;
-    border-radius: 3px;
-    background: hsl(var(--primary) / .15);
-    color: hsl(var(--primary));
-    border: 1px solid hsl(var(--primary) / .3);
-  }
-
-  /* Floating action */
-  .fab {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px; height: 56px;
-    border-radius: 50%;
-    background: hsl(var(--primary));
-    border: 2px solid hsl(var(--primary) / .6);
-    color: hsl(var(--primary-foreground));
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-    box-shadow: 0 8px 24px hsl(var(--primary) / .3);
-    transition: all .2s;
-  }
-  .fab:hover {
-    background: hsl(var(--primary) / .9);
-    transform: scale(1.05);
-  }
-  .fab svg { width: 24px; height: 24px; }
-  .fab-dot {
-    position: absolute;
-    top: -4px; right: -4px;
-    width: 16px; height: 16px;
-    background: hsl(var(--accent));
-    border: 2px solid hsl(var(--background));
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.15); opacity: .8; }
-  }
-
-  /* Footer */
-  footer {
-    padding: 30px 24px;
-    text-align: center;
-    border-top: 1px solid hsl(var(--border) / .3);
-    margin-top: 40px;
-  }
-  footer p {
-    font-family: var(--font-heading);
-    font-size: .72rem;
-    color: hsl(var(--muted-foreground));
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    line-height: 1.8;
-  }
-  footer .accent { color: hsl(var(--accent)); }
-  footer .small {
-    font-size: .6rem;
-    opacity: .55;
-    margin-top: 4px;
+  .option-list { display: flex; flex-direction: column; gap: 8px; margin: 1rem 0; }
+  .option-item {
+    background: hsl(var(--muted)); border: 1px solid hsl(var(--border));
+    padding: 1rem; border-radius: var(--radius); cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; transition: all 0.2s;
+  }
+  .option-item.selected { border-color: hsl(var(--primary)); background: hsl(var(--primary) / 0.1); }
+  
+  /* ===========================================
+     RESULTADO DO CRONOGRAMA
+     =========================================== */
+  .result-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+  .result-stat { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); padding: 12px; border-radius: var(--radius); text-align: center; }
+  .result-stat-label { font-size: 0.65rem; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+  .result-stat-value { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 700; color: hsl(var(--primary)); }
+  
+  .cronograma-week { margin-bottom: 2rem; }
+  .cronograma-week h4 { font-family: var(--font-heading); color: hsl(var(--primary)); border-left: 3px solid; padding-left: 10px; margin-bottom: 1rem; text-transform: uppercase; }
+  .cronograma-day { 
+    background: hsl(var(--card)); border: 1px solid hsl(var(--border)); padding: 1rem; 
+    border-radius: var(--radius); margin-bottom: 0.75rem;
   }
 
   /* Toast */
-  .toast {
-    position: fixed;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-30px);
-    background: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    padding: 12px 22px;
-    border-radius: var(--radius);
-    font-family: var(--font-heading);
-    font-size: .85rem;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    box-shadow: 0 10px 30px rgba(0,0,0,.4);
-    opacity: 0;
-    pointer-events: none;
-    transition: all .3s;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  #toast {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    background: hsl(var(--primary)); color: white; padding: 12px 24px;
+    border-radius: 50px; font-weight: 600; z-index: 1000; opacity: 0;
+    pointer-events: none; transition: 0.3s;
   }
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
-  .toast svg { width: 16px; height: 16px; }
-
-  /* Resultado cronograma */
-  .result-summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .result-stat {
-    padding: 14px 16px;
-    background: hsl(var(--muted) / .5);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-  }
-  .result-stat-label {
-    font-family: var(--font-heading);
-    font-size: .68rem;
-    color: hsl(var(--muted-foreground));
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .result-stat-value {
-    font-family: var(--font-heading);
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: hsl(var(--accent));
-    letter-spacing: .5px;
-  }
-
-  .cronograma-week {
-    margin-bottom: 16px;
-  }
-  .cronograma-week h4 {
-    font-family: var(--font-heading);
-    font-size: .85rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: hsl(var(--primary));
-    margin-bottom: 10px;
-  }
-  .cronograma-day {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    padding: 12px 14px;
-    background: hsl(var(--muted) / .4);
-    border: 1px solid hsl(var(--border) / .5);
-    border-radius: var(--radius);
-    margin-bottom: 6px;
-  }
-  .cronograma-day-label {
-    font-family: var(--font-heading);
-    font-size: .75rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: hsl(var(--accent));
-    min-width: 60px;
-  }
-  .cronograma-day-subject {
-    flex: 1;
-    font-size: .88rem;
-  }
-  .cronograma-day-hours {
-    font-family: var(--font-mono);
-    font-size: .8rem;
-    color: hsl(var(--muted-foreground));
-  }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 768px) {
-    .nav-inner { padding: 0 14px; gap: 10px; height: 56px; }
-    .logo-sub { display: none; }
-    .nav-user-name { display: none; }
-    .nav-link { padding: 6px 8px; font-size: .65rem; letter-spacing: 1px; }
-    .nav-link svg { width: 12px; height: 12px; }
-    .nav-link span:not(.nav-label-short) { display: none; }
-    .hero { padding: 50px 16px 40px; }
-    .hero h1 { font-size: 2.2rem; }
-    .hero-tiles { grid-template-columns: repeat(2, 1fr); }
-    .section { padding: 40px 16px; }
-    .container { padding: 0 16px; }
-    .wizard-connector { display: none; }
-    .wizard-steps { gap: 16px; }
-    .wizard-step-label { display: none; }
-    .chart-wrap { height: 240px; }
-  }
-  @media (max-width: 480px) {
-    .hero h1 { font-size: 1.8rem; }
-    .btn { padding: 10px 18px; font-size: .78rem; }
-    .wizard-panel { padding: 20px 16px; }
-    .charts-grid { grid-template-columns: 1fr; }
-  }
+  #toast.show { opacity: 1; top: 40px; }
 </style>
 </head>
 <body>
 
-<!-- ============== NAV ============== -->
-<nav class="nav">
-  <div class="nav-inner">
-    <a class="logo-link" data-page="base" onclick="goTo('base')">
-      <span class="logo-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-      </span>
-      <div>
-        <div class="logo-text">CONCURSO<span class="accent">TÁTICO</span></div>
-        <div class="logo-sub">Inteligência de Concursos</div>
-      </div>
-    </a>
-
-    <div class="nav-links">
-      <button class="nav-link active" data-nav="base" onclick="goTo('base')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-        <span>Base</span>
-      </button>
-      <button class="nav-link" data-nav="direito-pm" onclick="goTo('direito-pm')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
-        <span>Direito PM</span>
-      </button>
-      <button class="nav-link" data-nav="bancas" onclick="goTo('bancas')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg>
-        <span>Bancas</span>
-      </button>
-      <button class="nav-link" data-nav="cronograma" onclick="goTo('cronograma')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
-        <span>Cronograma</span>
-      </button>
-      <button class="nav-link" data-nav="historico" onclick="goTo('historico')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-        <span>Histórico</span>
-      </button>
-      <button class="nav-link" data-nav="pesquisa" onclick="goTo('pesquisa')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <span>Pesquisa</span>
-      </button>
+  <header>
+    <div class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+      Concurso Tático
     </div>
-
-    <div class="nav-user">
-      <button class="nav-logout" title="Sair">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-      </button>
+    <div class="search-container">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" class="search-input" placeholder="Buscar disciplina, lei ou banca..." oninput="handleSearch(this.value)">
     </div>
-  </div>
-</nav>
-
-<main>
-
-  <!-- ============ BASE (LANDING) ============ -->
-  <div class="page active" id="page-base">
-    <section class="hero">
-      <div class="hero-inner">
-        <span class="hero-badge">◆ Sistema Operacional</span>
-        <h1>
-          <span class="line1">Domine o</span>
-          <span class="line2">Campo de Batalha</span>
-          <span class="line3">do Concurso</span>
-        </h1>
-        <p>Plataforma tática de inteligência para candidatos a concursos de segurança pública. Do edital à aprovação.</p>
-        <div class="hero-cta">
-          <button class="btn btn-primary" onclick="goTo('cronograma')">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-            Montar Cronograma
-          </button>
-          <button class="btn btn-outline" onclick="goTo('analise')">Analisar Edital</button>
-        </div>
-
-        <div class="hero-tiles">
-          <a class="hero-tile" onclick="goTo('cronograma')">
-            <div class="hero-tile-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg></div>
-            <h4>Cronograma</h4>
-            <p>Monte seu plano</p>
-          </a>
-          <a class="hero-tile" onclick="goTo('direito-pm')">
-            <div class="hero-tile-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></div>
-            <h4>Direito PM</h4>
-            <p>Toda legislação</p>
-          </a>
-          <a class="hero-tile" onclick="goTo('bancas')">
-            <div class="hero-tile-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg></div>
-            <h4>Bancas</h4>
-            <p>O que mais cai</p>
-          </a>
-          <a class="hero-tile" onclick="goTo('analise')">
-            <div class="hero-tile-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
-            <h4>Analisar</h4>
-            <p>Seu edital</p>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-inner">
-        <div style="text-align:center; margin-bottom:40px;">
-          <h2 class="section-title">Plano de <span class="primary">Operação</span></h2>
-          <p class="section-subtitle">Quatro etapas estratégicas para transformar seu edital em um plano de ação</p>
-        </div>
-        <div class="operacao-cards">
-          <div class="op-card">
-            <span class="op-card-num">01</span>
-            <div class="op-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg></div>
-            <h3>Envio do Edital</h3>
-            <p>Cole o texto do edital ou faça upload do arquivo PDF. O sistema recebe e processa toda a informação.</p>
-          </div>
-          <div class="op-card">
-            <span class="op-card-num">02</span>
-            <div class="op-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/></svg></div>
-            <h3>Análise Tática</h3>
-            <p>A inteligência extrai matérias, pesos, datas e requisitos essenciais do edital.</p>
-          </div>
-          <div class="op-card">
-            <span class="op-card-num">03</span>
-            <div class="op-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg></div>
-            <h3>Cronograma Estratégico</h3>
-            <p>Um plano de estudos personalizado é gerado com base nas suas horas disponíveis e data da prova.</p>
-          </div>
-          <div class="op-card">
-            <span class="op-card-num">04</span>
-            <div class="op-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div>
-            <h3>Execução da Missão</h3>
-            <p>Siga o cronograma semana a semana e acompanhe seu progresso rumo à aprovação.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ============ DIREITO PM ============ -->
-  <div class="page" id="page-direito-pm">
-    <section class="section">
-      <div class="section-inner">
-        <div id="direito-pm-list-view">
-          <div class="section-header">
-            <div class="section-icon primary">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
-            </div>
-            <div>
-              <h2 class="section-title">Direito nas <span class="primary">PMs</span> do Brasil</h2>
-              <p class="section-subtitle">Todos os assuntos de Direito cobrados em concursos de Polícia Militar</p>
-            </div>
-          </div>
-          <div class="stats-pills">
-            <span class="stat-pill"><strong id="dpm-count-disc">—</strong><span class="stat-label">Disciplinas</span></span>
-            <span class="stat-pill"><strong>27</strong> <span class="stat-label">UFs Estados</span></span>
-            <span class="stat-pill"><strong id="dpm-count-topicos">—</strong><span class="stat-label">Tópicos</span></span>
-          </div>
-          <div class="search-bar">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <input type="text" id="dpm-search" placeholder="Buscar assunto, tópico ou subtópico..." oninput="renderDisciplines()">
-          </div>
-          <div class="discipline-list" id="discipline-list"></div>
-        </div>
-        <div id="direito-pm-detail-view" style="display:none;">
-          <a class="back-link" onclick="backToDisciplines()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-            Voltar
-          </a>
-          <div id="detail-content"></div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ============ BANCAS ============ -->
-  <div class="page" id="page-bancas">
-    <section class="section">
-      <div class="section-inner">
-        <div class="section-header">
-          <div class="section-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg>
-          </div>
-          <div>
-            <h2 class="section-title">Bancas <span class="accent">Organizadoras</span></h2>
-            <p class="section-subtitle">Análise das principais bancas em concursos de segurança pública — o que mais cai</p>
-          </div>
-        </div>
-
-        <div class="stats-pills">
-          <span class="stat-pill"><strong id="bancas-count">—</strong><span class="stat-label">Bancas Analisadas</span></span>
-          <span class="stat-pill"><strong>213+</strong><span class="stat-label">Provas Estudadas</span></span>
-          <span class="stat-pill"><strong>15</strong><span class="stat-label">Subtópicos Quentes</span></span>
-        </div>
-
-        <div class="tabs">
-          <button class="tab-btn active" data-bancas-tab="ranking">Ranking Geral</button>
-          <button class="tab-btn" data-bancas-tab="por-banca">Por Banca</button>
-          <button class="tab-btn" data-bancas-tab="subtopicos">Subtópicos Quentes</button>
-        </div>
-
-        <div id="bancas-tab-ranking" class="bancas-tab-content">
-          <div class="charts-grid">
-            <div class="chart-card">
-              <div class="chart-card-title">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-                Frequência nos Editais (%)
-              </div>
-              <div class="chart-wrap"><canvas id="chart-frequencia"></canvas></div>
-            </div>
-            <div class="chart-card">
-              <div class="chart-card-title">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-                Média de Questões por Prova
-              </div>
-              <div class="chart-wrap"><canvas id="chart-questoes"></canvas></div>
-            </div>
-          </div>
-          <div class="chart-card">
-            <div class="chart-card-title">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
-              Distribuição Proporcional nas Provas
-            </div>
-            <div class="chart-wrap" style="height:340px;"><canvas id="chart-distribuicao"></canvas></div>
-          </div>
-        </div>
-
-        <div id="bancas-tab-por-banca" class="bancas-tab-content" style="display:none;">
-          <div class="bancas-filters" id="bancas-filters"></div>
-          <div class="bancas-grid" id="bancas-grid"></div>
-        </div>
-
-        <div id="bancas-tab-subtopicos" class="bancas-tab-content" style="display:none;">
-          <div id="subtopicos-list"></div>
-        </div>
-
-      </div>
-    </section>
-  </div>
-
-  <!-- ============ CRONOGRAMA (WIZARD) ============ -->
-  <div class="page" id="page-cronograma">
-    <section class="section">
-      <div class="section-inner">
-        <div class="section-header">
-          <button class="wizard-back" onclick="goTo('base')" title="Voltar">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          </button>
-          <div>
-            <h2 class="section-title">Novo <span class="accent">Cronograma</span></h2>
-            <p class="section-subtitle">Configure seu plano tático de estudos</p>
-          </div>
-        </div>
-
-        <div class="wizard-steps" id="wizard-steps">
-          <div class="wizard-step active" data-step="1"><span class="wizard-step-num">1</span><span class="wizard-step-label">Banca</span></div>
-          <div class="wizard-connector"></div>
-          <div class="wizard-step" data-step="2"><span class="wizard-step-num">2</span><span class="wizard-step-label">Matérias</span></div>
-          <div class="wizard-connector"></div>
-          <div class="wizard-step" data-step="3"><span class="wizard-step-num">3</span><span class="wizard-step-label">Horários</span></div>
-          <div class="wizard-connector"></div>
-          <div class="wizard-step" data-step="4"><span class="wizard-step-num">4</span><span class="wizard-step-label">Revisão</span></div>
-          <div class="wizard-connector"></div>
-          <div class="wizard-step" data-step="5"><span class="wizard-step-num">5</span><span class="wizard-step-label">Cronograma</span></div>
-        </div>
-
-        <!-- STEP 1 -->
-        <div class="wizard-panel" id="wizard-panel-1">
-          <div class="wizard-panel-header">
-            <div class="section-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg></div>
-            <div>
-              <h3>Selecionar Banca</h3>
-              <p>Adapta as matérias ao perfil da organizadora</p>
-            </div>
-          </div>
-          <div id="wizard-bancas-list"></div>
-          <div class="wizard-footer">
-            <div></div>
-            <button class="btn btn-primary" onclick="wizardNext()">
-              Avançar
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 2 -->
-        <div class="wizard-panel" id="wizard-panel-2" style="display:none;">
-          <div class="wizard-panel-header">
-            <div class="section-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg></div>
-            <div>
-              <h3>Configurar Matérias</h3>
-              <p>Selecione as disciplinas do seu edital</p>
-            </div>
-          </div>
-          <div id="wizard-materias-list"></div>
-          <div class="wizard-footer">
-            <button class="btn btn-outline" onclick="wizardPrev()">Voltar</button>
-            <button class="btn btn-primary" onclick="wizardNext()">
-              Avançar
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 3 -->
-        <div class="wizard-panel" id="wizard-panel-3" style="display:none;">
-          <div class="wizard-panel-header">
-            <div class="section-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-            <div>
-              <h3>Horários Disponíveis</h3>
-              <p>Quantas horas por dia você pode estudar</p>
-            </div>
-          </div>
-          <div class="slider-row">
-            <div class="slider-top">
-              <span class="field-label">Horas por dia</span>
-              <span class="slider-value"><span id="horas-value">4</span>h</span>
-            </div>
-            <input type="range" id="horas-range" min="1" max="12" value="4" oninput="document.getElementById('horas-value').textContent = this.value;">
-            <div class="slider-range"><span>1h</span><span>12h</span></div>
-          </div>
-          <div class="slider-row">
-            <div class="slider-top">
-              <span class="field-label">Dias disponíveis por semana</span>
-              <span class="slider-value"><span id="dias-value">6</span>d</span>
-            </div>
-            <input type="range" id="dias-range" min="3" max="7" value="6" oninput="document.getElementById('dias-value').textContent = this.value;">
-            <div class="slider-range"><span>3d</span><span>7d</span></div>
-          </div>
-          <div class="slider-row">
-            <div class="slider-top">
-              <span class="field-label">Semanas até a prova</span>
-              <span class="slider-value"><span id="semanas-value">16</span>s</span>
-            </div>
-            <input type="range" id="semanas-range" min="4" max="52" value="16" oninput="document.getElementById('semanas-value').textContent = this.value;">
-            <div class="slider-range"><span>4s</span><span>52s</span></div>
-          </div>
-          <div class="wizard-footer">
-            <button class="btn btn-outline" onclick="wizardPrev()">Voltar</button>
-            <button class="btn btn-primary" onclick="wizardNext()">
-              Avançar
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 4 -->
-        <div class="wizard-panel" id="wizard-panel-4" style="display:none;">
-          <div class="wizard-panel-header">
-            <div class="section-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-            <div>
-              <h3>Revisão</h3>
-              <p>Confira as configurações antes de gerar o cronograma</p>
-            </div>
-          </div>
-          <div id="revisao-content"></div>
-          <div class="wizard-footer">
-            <button class="btn btn-outline" onclick="wizardPrev()">Voltar</button>
-            <button class="btn btn-primary" onclick="wizardGenerate()">
-              Gerar Cronograma
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 5 -->
-        <div class="wizard-panel" id="wizard-panel-5" style="display:none;">
-          <div class="wizard-panel-header">
-            <div class="section-icon primary"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg></div>
-            <div>
-              <h3>Cronograma Gerado</h3>
-              <p>Seu plano tático está pronto</p>
-            </div>
-          </div>
-          <div id="cronograma-result"></div>
-          <div class="wizard-footer">
-            <button class="btn btn-outline" onclick="wizardReset()">Novo Cronograma</button>
-            <button class="btn btn-primary" onclick="saveCronograma()">
-              Salvar no Histórico
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </section>
-  </div>
-
-  <!-- ============ ANÁLISE ============ -->
-  <div class="page" id="page-analise">
-    <section class="section">
-      <div class="section-inner">
-        <div class="section-header">
-          <button class="wizard-back" onclick="goTo('base')" title="Voltar">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          </button>
-          <div>
-            <h2 class="section-title">Central de <span class="accent">Análise</span></h2>
-            <p class="section-subtitle">Envie seu edital para iniciar a análise tática</p>
-          </div>
-        </div>
-
-        <div class="analise-card">
-          <div class="analise-card-header">
-            <div class="section-icon primary"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg></div>
-            <div><h3 style="font-family:var(--font-heading);font-size:1.05rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;">Dados do Edital</h3></div>
-          </div>
-
-          <label class="field-label">Upload do Edital (PDF)</label>
-          <label class="upload-box" for="upload-input">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-            <div class="upload-box-text" id="upload-text">Clique para selecionar arquivo</div>
-          </label>
-          <input type="file" id="upload-input" accept=".pdf,.txt" style="display:none;" onchange="handleFileUpload(this)">
-
-          <div class="divider-or">ou</div>
-
-          <label class="field-label">Cole o Texto do Edital</label>
-          <textarea id="edital-text" placeholder="Cole aqui o conteúdo do edital do concurso..."></textarea>
-
-          <div class="slider-row">
-            <div class="slider-top">
-              <span class="field-label">Horas disponíveis por dia</span>
-              <span class="slider-value"><span id="analise-horas-value">4</span>h</span>
-            </div>
-            <input type="range" id="analise-horas" min="1" max="12" value="4" oninput="document.getElementById('analise-horas-value').textContent = this.value;">
-            <div class="slider-range"><span>1h</span><span>12h</span></div>
-          </div>
-
-          <button class="btn btn-primary btn-iniciar" onclick="iniciarAnalise()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-            Iniciar Análise Tática
-          </button>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ============ HISTÓRICO ============ -->
-  <div class="page" id="page-historico">
-    <section class="section">
-      <div class="section-inner">
-        <div class="section-header">
-          <div class="section-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>
-          </div>
-          <div>
-            <h2 class="section-title">Seu <span class="accent">Histórico</span></h2>
-            <p class="section-subtitle">Cronogramas e análises que você já criou</p>
-          </div>
-        </div>
-        <div id="historico-content"></div>
-      </div>
-    </section>
-  </div>
-
-  <!-- ============ PESQUISA ============ -->
-  <div class="page" id="page-pesquisa">
-    <section class="section">
-      <div class="section-inner">
-        <div class="section-header">
-          <div class="section-icon primary">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          </div>
-          <div>
-            <h2 class="section-title"><span class="primary">Pesquisa</span> Global</h2>
-            <p class="section-subtitle">Busque disciplinas, tópicos, bancas ou estados</p>
-          </div>
-        </div>
-        <div class="search-bar">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <input type="text" id="pesq-input" placeholder="Ex: Direito Penal, CESPE, São Paulo, Artigo 121..." oninput="runSearch()">
-        </div>
-        <div class="pesquisa-results" id="pesq-results"></div>
-      </div>
-    </section>
-  </div>
-
-</main>
-
-<footer>
-  <p>Concurso<span class="accent">Tático</span> © 2026 — Todos os direitos reservados</p>
-  <p class="small">Sistema de Inteligência para Concursos Públicos</p>
-</footer>
-
-<button class="fab" title="Assistente" onclick="showToast('Assistente em breve')">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-  <span class="fab-dot"></span>
-</button>
-
-<!-- Study Modal -->
-<div class="study-modal-backdrop" id="study-modal" onclick="if(event.target===this)closeStudyModal()">
-  <div class="study-modal">
-    <div class="study-modal-header">
-      <div class="sm-head-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
-      </div>
-      <div class="sm-head-text">
-        <div class="sm-discipline">Disciplina</div>
-        <div class="sm-group">Grupo</div>
-      </div>
-      <button class="sm-close" onclick="closeStudyModal()" title="Fechar">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
-    </div>
-    <div class="study-modal-body">
-      <h2 class="sm-title">Subtópico</h2>
-      <div class="sm-section">
-        <h4>Resumo do tópico</h4>
-        <p>Este é um ponto específico do programa cobrado em concursos de PM. Recomenda-se aprofundar com leitura da lei seca, questões anteriores e resumo esquemático.</p>
-      </div>
-      <div class="sm-section">
-        <h4>Plano de estudo sugerido</h4>
-        <ul>
-          <li><strong>Leitura inicial:</strong> legislação direta (letra de lei) — 30 a 45 min</li>
-          <li><strong>Aprofundamento:</strong> doutrina e jurisprudência — 30 min</li>
-          <li><strong>Fixação:</strong> 20 questões anteriores de concursos PM — 45 min</li>
-          <li><strong>Revisão:</strong> mapa mental ou resumo esquemático — 15 min</li>
-        </ul>
-      </div>
-      <div class="sm-section">
-        <h4>Recursos públicos</h4>
-        <div class="sm-resources">
-          <a class="sm-res" href="https://www.planalto.gov.br" target="_blank" rel="noopener">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
-            Planalto — Legislação
-          </a>
-          <a class="sm-res" href="https://www.dizerodireito.com.br" target="_blank" rel="noopener">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-            Dizer o Direito
-          </a>
-          <a class="sm-res" href="https://www.qconcursos.com" target="_blank" rel="noopener">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14h6"/></svg>
-            Questões anteriores
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="study-modal-footer">
-      <button class="sm-action" id="sm-mark"></button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-  /* ===========================================
-     DATA — Dados reais de concursos PM/segurança pública
-     =========================================== */
-
-  // Dados reais extraídos do Tático Concursos (Base44)
-  // Cada disciplina tem "grupos" (temas) com subtópicos detalhados, e avgQuestoes = média real de questões por prova
-  const DISCIPLINAS = [
-    { id: 'constitucional', nome: 'Direito Constitucional', icon: 'scale', editais: 100, subtopicos: 30, avgQuestoes: 9.8,
-      desc: 'Base de todo o ordenamento jurídico brasileiro. Praticamente obrigatória em todos os editais.',
-      grupos: [
-        { nome: 'Princípios Fundamentais', subs: [
-          'Fundamentos da República Federativa do Brasil (art. 1º CF)',
-          'Objetivos fundamentais da República (art. 3º CF)',
-          'Princípios das relações internacionais (art. 4º CF)',
-          'Separação dos poderes — Teoria e aplicação',
-          'Estado Democrático de Direito'
-        ]},
-        { nome: 'Direitos e Garantias Fundamentais', subs: [
-          'Direitos individuais e coletivos (art. 5º CF) — todos os incisos',
-          'Habeas corpus, mandado de segurança, habeas data, mandado de injunção',
-          'Ação popular',
-          'Direitos sociais (arts. 6º a 11)',
-          'Direitos políticos (arts. 14 a 16)',
-          'Partidos políticos (art. 17)',
-          'Remédios constitucionais'
-        ]},
-        { nome: 'Organização do Estado', subs: [
-          'Organização político-administrativa (art. 18)',
-          'União, Estados, DF e Municípios — competências',
-          'Repartição de competências (arts. 21, 22, 23, 24, 25, 30)',
-          'Intervenção federal e estadual',
-          'Administração pública — princípios (LIMPE)',
-          'Servidores públicos — direitos, deveres e proibições'
-        ]},
-        { nome: 'Organização dos Poderes', subs: [
-          'Poder Legislativo — estrutura e funções',
-          'Processo legislativo (tipos de normas)',
-          'Poder Executivo — atribuições do Presidente',
-          'Poder Judiciário — estrutura e garantias',
-          'Funções essenciais à Justiça (MP, DP, AGU)'
-        ]},
-        { nome: 'Defesa do Estado e das Instituições Democráticas', subs: [
-          'Estado de defesa e estado de sítio',
-          'Forças Armadas e Segurança Pública (arts. 136 a 144)',
-          'Polícias Militares — competência constitucional',
-          'Polícia ostensiva e preservação da ordem pública'
-        ]},
-        { nome: 'Ordem Social e Tributária', subs: [
-          'Seguridade social, saúde, previdência, assistência social',
-          'Sistema tributário nacional — noções gerais',
-          'Princípios tributários constitucionais'
-        ]}
-      ]
-    },
-
-    { id: 'penal', nome: 'Direito Penal', icon: 'alert-triangle', editais: 100, subtopicos: 62, avgQuestoes: 9.2,
-      desc: 'Uma das mais cobradas em concursos de PM. Exige domínio do Código Penal e legislação especial.',
-      grupos: [
-        { nome: 'Aplicação da Lei Penal', subs: [
-          'Princípios da legalidade e anterioridade (arts. 1º e 2º CP)',
-          'Lei penal no tempo — retroatividade benéfica',
-          'Lei penal no espaço — territorialidade e extraterritorialidade (arts. 5-7)',
-          'Tempo e lugar do crime (arts. 4º e 6º)',
-          'Contagem de prazo (art. 10)',
-          'Conflito aparente de normas'
-        ]},
-        { nome: 'Teoria Geral do Crime', subs: [
-          'Conceito analítico de crime — fato típico, antijurídico e culpável',
-          'Relação de causalidade (art. 13)',
-          'Crime consumado e tentado (art. 14)',
-          'Desistência voluntária e arrependimento eficaz (art. 15)',
-          'Arrependimento posterior (art. 16)',
-          'Crime impossível (art. 17)',
-          'Dolo e culpa (art. 18)',
-          'Erro de tipo e erro de proibição (arts. 20 e 21)'
-        ]},
-        { nome: 'Ilicitude e Culpabilidade', subs: [
-          'Exclusão de ilicitude (art. 23) — estado de necessidade, legítima defesa',
-          'Estrito cumprimento do dever legal e exercício regular de direito',
-          'Imputabilidade penal (arts. 26 a 28)',
-          'Menoridade penal',
-          'Embriaguez e suas consequências',
-          'Coação moral irresistível e obediência hierárquica'
-        ]},
-        { nome: 'Concurso de Pessoas e de Crimes', subs: [
-          'Autoria, coautoria e participação (arts. 29 a 31)',
-          'Cooperação dolosamente distinta',
-          'Concurso material, formal e crime continuado (arts. 69 a 71)'
-        ]},
-        { nome: 'Das Penas', subs: [
-          'Espécies de pena (art. 32)',
-          'Penas privativas de liberdade — regimes (arts. 33 a 42)',
-          'Penas restritivas de direitos (arts. 43 a 48)',
-          'Pena de multa (arts. 49 a 52)',
-          'Aplicação da pena — dosimetria (arts. 59 a 68)',
-          'Suspensão condicional da pena — sursis (arts. 77 a 82)',
-          'Livramento condicional (arts. 83 a 90)'
-        ]},
-        { nome: 'Extinção da Punibilidade', subs: [
-          'Causas de extinção (art. 107)',
-          'Prescrição — espécies e contagem (arts. 109 a 119)',
-          'Decadência e perempção'
-        ]},
-        { nome: 'Crimes contra a Pessoa', subs: [
-          'Homicídio (art. 121) — simples, qualificado, privilegiado, culposo',
-          'Feminicídio',
-          'Aborto (arts. 124 a 128)',
-          'Lesão corporal (art. 129)',
-          'Periclitação da vida e da saúde (arts. 130 a 136)',
-          'Crimes contra a honra (arts. 138 a 140) — calúnia, difamação, injúria',
-          'Crimes contra a liberdade individual (arts. 146 a 154)'
-        ]},
-        { nome: 'Crimes contra o Patrimônio', subs: [
-          'Furto e suas qualificadoras (arts. 155 e 156)',
-          'Roubo e extorsão (arts. 157 a 160)',
-          'Apropriação indébita e estelionato (arts. 168 a 171)',
-          'Receptação (art. 180)',
-          'Crimes contra a propriedade imaterial (arts. 184 a 186)'
-        ]},
-        { nome: 'Crimes contra a Dignidade Sexual', subs: [
-          'Estupro (art. 213) e estupro de vulnerável (art. 217-A)',
-          'Importunação sexual e assédio (arts. 215-A e 216-A)',
-          'Exploração sexual e tráfico de pessoas (arts. 218-B e 231-A)'
-        ]},
-        { nome: 'Crimes contra a Administração Pública', subs: [
-          'Peculato (art. 312)',
-          'Concussão e corrupção (arts. 316 a 333)',
-          'Prevaricação (art. 319) e condescendência criminosa (art. 320)',
-          'Abandono de função e resistência (arts. 329 a 331)',
-          'Desobediência e desacato (arts. 330 e 331)'
-        ]}
-      ]
-    },
-
-    { id: 'processual-penal', nome: 'Direito Processual Penal', icon: 'gavel', editais: 98, subtopicos: 39, avgQuestoes: 7.5,
-      desc: 'Regula o processo penal do inquérito ao julgamento. Muito cobrado em todos os editais de PM.',
-      grupos: [
-        { nome: 'Princípios e Aplicação da Lei Processual', subs: [
-          'Princípios do processo penal (devido processo legal, contraditório, ampla defesa)',
-          'Aplicação da lei processual no tempo e no espaço',
-          'Interpretação e integração'
-        ]},
-        { nome: 'Inquérito Policial', subs: [
-          'Conceito, características e finalidade (arts. 4º a 23 CPP)',
-          'Notitia criminis — espécies',
-          'Atos investigatórios e diligências',
-          'Indiciamento, relatório e arquivamento',
-          'Atribuições do delegado de polícia'
-        ]},
-        { nome: 'Ação Penal', subs: [
-          'Ação penal pública incondicionada e condicionada',
-          'Ação penal privada — subsidiária da pública',
-          'Denúncia e queixa — requisitos (art. 41)',
-          'Representação e requisição (arts. 24 a 26)'
-        ]},
-        { nome: 'Sujeitos do Processo', subs: [
-          'Juiz, Ministério Público, acusado e defensor',
-          'Assistente de acusação',
-          'Suspeição, impedimento e incompatibilidade'
-        ]},
-        { nome: 'Prisão e Medidas Cautelares', subs: [
-          'Prisão em flagrante — espécies (art. 302)',
-          'Prisão preventiva — requisitos (arts. 311 a 316)',
-          'Prisão temporária (Lei 7.960/89)',
-          'Audiência de custódia',
-          'Medidas cautelares diversas da prisão (art. 319)',
-          'Liberdade provisória e fiança'
-        ]},
-        { nome: 'Provas', subs: [
-          'Provas em espécie (arts. 155 a 250)',
-          'Prova pericial, documental e testemunhal',
-          'Interrogatório do acusado',
-          'Acareação, reconhecimento de pessoas e coisas',
-          'Busca e apreensão (arts. 240 a 250)'
-        ]},
-        { nome: 'Procedimentos e Sentença', subs: [
-          'Procedimento comum — ordinário, sumário e sumaríssimo',
-          'Procedimento do Júri (arts. 406 a 497)',
-          'Sentença penal — absolutória e condenatória',
-          'Efeitos da sentença penal'
-        ]},
-        { nome: 'Nulidades e Recursos', subs: [
-          'Nulidades no processo penal (arts. 563 a 573)',
-          'Recurso em sentido estrito (art. 581)',
-          'Apelação (arts. 593 a 603)',
-          'Habeas corpus (arts. 647 a 667)',
-          'Revisão criminal (arts. 621 a 631)'
-        ]}
-      ]
-    },
-
-    { id: 'administrativo', nome: 'Direito Administrativo', icon: 'building', editais: 95, subtopicos: 31, avgQuestoes: 6.8,
-      desc: 'Regula a atuação do Estado. Essencial para entender os direitos e deveres do policial militar como servidor.',
-      grupos: [
-        { nome: 'Conceitos Fundamentais', subs: [
-          'Conceito, fontes e princípios do Direito Administrativo',
-          'Princípios: LIMPE + legalidade, impessoalidade, moralidade, publicidade, eficiência',
-          'Outros princípios: razoabilidade, proporcionalidade, continuidade, autotutela',
-          'Administração direta e indireta'
-        ]},
-        { nome: 'Poderes Administrativos', subs: [
-          'Poder vinculado e discricionário',
-          'Poder hierárquico',
-          'Poder disciplinar',
-          'Poder regulamentar',
-          'Poder de polícia — conceito, atributos e limites',
-          'Abuso de poder — excesso e desvio de finalidade'
-        ]},
-        { nome: 'Ato Administrativo', subs: [
-          'Conceito, requisitos e elementos',
-          'Atributos: presunção de legitimidade, imperatividade, autoexecutoriedade, tipicidade',
-          'Classificação dos atos administrativos',
-          'Validade, eficácia, extinção e convalidação',
-          'Atos nulos e anuláveis'
-        ]},
-        { nome: 'Servidores Públicos', subs: [
-          'Cargo, emprego e função pública',
-          'Formas de provimento e vacância',
-          'Estabilidade e vitaliciedade',
-          'Regime disciplinar — deveres, proibições, penalidades',
-          'Processo administrativo disciplinar (PAD)',
-          'Lei 8.112/90 — estatuto federal (para PM federais/concursos federais)',
-          'Estatuto dos policiais militares estaduais — princípios gerais'
-        ]},
-        { nome: 'Controle da Administração', subs: [
-          'Controle interno e externo',
-          'Controle parlamentar e judicial',
-          'Improbidade administrativa (Lei 8.429/92)',
-          'Ação popular e ação civil pública',
-          'Tribunal de Contas'
-        ]},
-        { nome: 'Licitações e Contratos', subs: [
-          'Lei 14.133/2021 (Nova Lei de Licitações) — noções gerais',
-          'Princípios, modalidades e tipos de licitação',
-          'Dispensa e inexigibilidade',
-          'Contratos administrativos — cláusulas exorbitantes'
-        ]}
-      ]
-    },
-
-    { id: 'penal-especial', nome: 'Legislação Penal Especial', icon: 'alert-octagon', editais: 90, subtopicos: 43, avgQuestoes: 6.1,
-      desc: 'Leis especiais que regulam crimes específicos. Muito importante para PM, especialmente drogas e armas.',
-      grupos: [
-        { nome: 'Lei de Drogas — Lei 11.343/06', subs: [
-          'Tráfico de drogas (art. 33) — caput e parágrafos',
-          'Tráfico privilegiado (art. 33, §4º)',
-          'Associação para o tráfico (art. 35)',
-          'Posse para uso pessoal (art. 28) — natureza jurídica',
-          'Aspectos processuais específicos'
-        ]},
-        { nome: 'Estatuto do Desarmamento — Lei 10.826/03', subs: [
-          'Porte ilegal de arma de fogo (arts. 14 e 16)',
-          'Arma permitida vs. restrita',
-          'Disparo de arma de fogo (art. 15)',
-          'Comércio ilegal e tráfico internacional (arts. 17 e 18)',
-          'SINARM e SIGMA'
-        ]},
-        { nome: 'Lei Maria da Penha — Lei 11.340/06', subs: [
-          'Formas de violência doméstica (art. 7º)',
-          'Medidas protetivas de urgência (arts. 22 a 24)',
-          'Prisão em flagrante e preventiva específica',
-          'Atendimento pela autoridade policial (arts. 10 a 12)'
-        ]},
-        { nome: 'Crimes Hediondos — Lei 8.072/90', subs: [
-          'Rol de crimes hediondos (art. 1º)',
-          'Efeitos processuais e execucionais',
-          'Progressão de regime diferenciada',
-          'Livramento condicional específico'
-        ]},
-        { nome: 'Tortura — Lei 9.455/97', subs: [
-          'Elementos do tipo — tortura-prova, tortura-crime, tortura-castigo',
-          'Aumentos de pena',
-          'Equiparação a crime hediondo'
-        ]},
-        { nome: 'Abuso de Autoridade — Lei 13.869/19', subs: [
-          'Elementos do tipo — dolo específico',
-          'Condutas típicas mais comuns em ambiente policial',
-          'Efeitos administrativos'
-        ]},
-        { nome: 'Outras Leis Relevantes', subs: [
-          'ECA (Lei 8.069/90) — atos infracionais e medidas socioeducativas',
-          'Racismo (Lei 7.716/89) e injúria racial',
-          'Lei Antiterrorismo (Lei 13.260/16)',
-          'Organização Criminosa (Lei 12.850/13)',
-          'Lavagem de Dinheiro (Lei 9.613/98)',
-          'Crimes de Trânsito (Lei 9.503/97) — embriaguez, homicídio culposo',
-          'Juizados Especiais Criminais (Lei 9.099/95) — infrações de menor potencial ofensivo'
-        ]}
-      ]
-    },
-
-    { id: 'militar-estadual', nome: 'Legislação Militar Estadual', icon: 'star', editais: 85, subtopicos: 24, avgQuestoes: 5.4,
-      desc: 'Estatutos das PMs estaduais. Varia por estado, mas segue padrão similar em todo o país.',
-      grupos: [
-        { nome: 'Estatuto dos Militares Estaduais', subs: [
-          'Definição de militar estadual e hierarquia',
-          'Posto e graduação — escala hierárquica',
-          'Deveres e valores militares',
-          'Direitos dos militares — remuneração e vantagens',
-          'Situações funcionais — ativa, reserva e reforma',
-          'Licenças e afastamentos'
-        ]},
-        { nome: 'Regulamento Disciplinar', subs: [
-          'Transgressões disciplinares — espécies e classificação',
-          'Sanções disciplinares (advertência, repreensão, detenção, prisão)',
-          'Processo administrativo disciplinar militar',
-          'Direito de defesa e recursos',
-          'Comportamento militar — classificação'
-        ]},
-        { nome: 'Lei Orgânica da PM', subs: [
-          'Competência constitucional — art. 144 CF',
-          'Estrutura organizacional da corporação',
-          'Missão institucional',
-          'Comandos e unidades operacionais'
-        ]},
-        { nome: 'Código de Ética e Continências', subs: [
-          'Código de ética e disciplina',
-          'Uniformes e apresentação pessoal',
-          'Continências militares',
-          'Sinais de respeito',
-          'Honras militares'
-        ]}
-      ]
-    },
-
-    { id: 'penal-militar', nome: 'Direito Penal Militar', icon: 'shield', editais: 75, subtopicos: 16, avgQuestoes: 4.2,
-      desc: 'Cobrado especialmente em concursos para PM estaduais e Forças Armadas.',
-      grupos: [
-        { nome: 'Aplicação da Lei Penal Militar', subs: [
-          'Princípios do direito penal militar',
-          'Lei penal militar no tempo e espaço (arts. 1º a 7º CPM)',
-          'Crime militar — conceito (art. 9º CPM)',
-          'Crime militar próprio e impróprio'
-        ]},
-        { nome: 'Teoria do Crime Militar', subs: [
-          'Fato típico, antijurídico e culpável',
-          'Inimputabilidade e causas de exclusão',
-          'Tentativa, consumação e desistência voluntária',
-          'Concurso de pessoas no CPM'
-        ]},
-        { nome: 'Penas no CPM', subs: [
-          'Espécies de penas principais e acessórias',
-          'Aplicação e dosimetria',
-          'Suspensão condicional e livramento no CPM'
-        ]},
-        { nome: 'Crimes Militares em Espécie', subs: [
-          'Crimes contra a autoridade ou disciplina (arts. 149 a 182)',
-          'Motim e revolta (arts. 149 a 153)',
-          'Violência contra superior e inferior (arts. 157 e 175)',
-          'Desrespeito e desacato (arts. 160 a 162)',
-          'Abandono de posto (art. 195 CPM)'
-        ]}
-      ]
-    },
-
-    { id: 'civil', nome: 'Noções de Direito Civil', icon: 'users', editais: 40, subtopicos: 10, avgQuestoes: 3.1,
-      desc: 'Cobrado especialmente em editais para Oficial PM. Menos frequente para praças.',
-      grupos: [
-        { nome: 'Parte Geral', subs: [
-          'Pessoas naturais — personalidade e capacidade',
-          'Pessoas jurídicas — classificação',
-          'Domicílio e residência',
-          'Bens — classificação',
-          'Fatos, atos e negócios jurídicos',
-          'Prescrição e decadência'
-        ]},
-        { nome: 'Responsabilidade Civil', subs: [
-          'Responsabilidade civil subjetiva e objetiva',
-          'Dano material, moral e estético',
-          'Responsabilidade civil do Estado e do servidor',
-          'Excludentes de responsabilidade'
-        ]}
-      ]
-    }
-  ];
-
-  const BANCAS = [
-    { id: 'cespe', nome: 'CEBRASPE', nomeFull: 'Centro Brasileiro de Pesquisa e Avaliação',
-      tag: 'alta', tagLabel: 'Alta Cobrança',
-      estados: ['PMDF', 'PMCE', 'PMPB', 'PMBA'], extras: 3,
-      top: 'Direito Constitucional', topFreq: 25,
-      editais: 52, materias: { 'Direito Constitucional': 25, 'Direito Penal': 22, 'Proc. Penal': 18, 'Adm': 15, 'Leg. Penal Esp.': 12, 'Portug.': 8 }
-    },
-    { id: 'vunesp', nome: 'VUNESP', nomeFull: 'Fundação para o Vestibular da UNESP',
-      tag: 'media-alta', tagLabel: 'Média-Alta',
-      estados: ['PMSP', 'PCSP', 'GMSP', 'DETRANSP'], extras: 0,
-      top: 'Direito Constitucional', topFreq: 22,
-      editais: 38, materias: { 'Direito Constitucional': 22, 'Língua Port.': 20, 'Matemática': 15, 'Raciocínio Lóg.': 13, 'Adm. Pública': 10, 'Atualidades': 10, 'Inform.': 10 }
-    },
-    { id: 'fgv', nome: 'FGV', nomeFull: 'Fundação Getulio Vargas',
-      tag: 'alta', tagLabel: 'Alta Cobrança',
-      estados: ['PMSP', 'PCRJ', 'SEFAZ'], extras: 0,
-      top: 'Direito Administrativo', topFreq: 24,
-      editais: 30, materias: { 'Direito Adm.': 24, 'Direito Const.': 20, 'Direito Penal': 18, 'Proc. Penal': 14, 'Port.': 14, 'Raciocínio Lóg.': 10 }
-    },
-    { id: 'ibfc', nome: 'IBFC', nomeFull: 'Instituto Brasileiro de Formação e Capacitação',
-      tag: 'media', tagLabel: 'Cobrança Média',
-      estados: ['PMPA', 'PMAL', 'PMAM', 'PCPA'], extras: 1,
-      top: 'Direito Penal', topFreq: 24,
-      editais: 24, materias: { 'Direito Penal': 24, 'Direito Const.': 20, 'Proc. Penal': 18, 'Direito Adm.': 14, 'Leg. Militar': 12, 'Port.': 12 }
-    },
-    { id: 'fcc', nome: 'FCC', nomeFull: 'Fundação Carlos Chagas',
-      tag: 'media', tagLabel: 'Cobrança Média',
-      estados: ['PMSC', 'BMSC', 'PCSC', 'PMMA'], extras: 0,
-      top: 'Direito Constitucional', topFreq: 23,
-      editais: 22, materias: { 'Direito Const.': 23, 'Direito Adm.': 20, 'Direito Penal': 18, 'Proc. Penal': 14, 'Port.': 15, 'Raciocínio Lóg.': 10 }
-    },
-    { id: 'aocp', nome: 'AOCP', nomeFull: 'Associação Objetiva Concursos Públicos',
-      tag: 'media-alta', tagLabel: 'Média-Alta',
-      estados: ['PMMG', 'BMMT', 'PCMG', 'PMGO'], extras: 0,
-      top: 'Leg. Militar Estadual', topFreq: 25,
-      editais: 28, materias: { 'Leg. Militar Est.': 25, 'Direito Penal': 20, 'Direito Const.': 18, 'Proc. Penal': 14, 'Dir. Penal Mil.': 12, 'Port.': 11 }
-    },
-    { id: 'ibade', nome: 'IBADE', nomeFull: 'Instituto Brasileiro de Apoio e Desenvolvimento Executivo',
-      tag: 'media', tagLabel: 'Cobrança Média',
-      estados: ['PMAC', 'PMRO', 'PMTO', 'PCRO'], extras: 1,
-      top: 'Direito Penal', topFreq: 26,
-      editais: 19, materias: { 'Direito Penal': 26, 'Direito Const.': 20, 'Proc. Penal': 16, 'Direito Adm.': 14, 'Leg. Militar': 12, 'Port.': 12 }
-    },
-    { id: 'idecan', nome: 'IDECAN', nomeFull: 'Instituto de Desenvolvimento Educacional',
-      tag: 'media', tagLabel: 'Cobrança Média',
-      estados: ['PMES', 'PCPB', 'BMES', 'PPPB'], extras: 0,
-      top: 'Direito Constitucional', topFreq: 22,
-      editais: 16, materias: { 'Direito Const.': 22, 'Direito Penal': 20, 'Direito Adm.': 17, 'Proc. Penal': 15, 'Humanos': 13, 'Port.': 13 }
-    }
-  ];
-
-  const ESTADOS_BR = [
-    'AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG',
-    'PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'
-  ];
-
-  /* ===========================================
-     STATE
-     =========================================== */
-  const state = {
-    wizardStep: 1,
-    wizardData: { banca: null, materias: [], horas: 4, dias: 6, semanas: 16 },
-    history: JSON.parse(localStorage.getItem('ct_history') || '[]'),
-    progresso: JSON.parse(localStorage.getItem('ct_progresso') || '{}'),
-    currentPage: 'base'
-  };
-
-  /* ===========================================
-     NAVIGATION
-     =========================================== */
-  function goTo(page) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + page).classList.add('active');
-    document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
-    const activeBtn = document.querySelector(`[data-nav="${page}"]`);
-    if (activeBtn) activeBtn.classList.add('active');
-    state.currentPage = page;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (page === 'direito-pm') renderDisciplines();
-    if (page === 'bancas') renderBancas();
-    if (page === 'cronograma' && state.wizardStep === 1) renderWizardBancas();
-    if (page === 'historico') renderHistorico();
-  }
-
-  /* ===========================================
-     DISCIPLINE ICONS (SVG mini library)
-     =========================================== */
-  const ICONS = {
-    'scale': '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
-    'building': '<rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/>',
-    'alert-triangle': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
-    'gavel': '<path d="m14 13-7.5 7.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L11 10"/><path d="m16 16 6-6"/><path d="m8 8 6-6"/><path d="m9 7 8 8"/><path d="m21 11-8-8"/>',
-    'alert-octagon': '<polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>',
-    'shield': '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
-    'star': '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
-    'users': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
-    'clipboard-list': '<rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>',
-    'heart': '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>'
-  };
-  function iconSvg(name) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ICONS.shield}</svg>`;
-  }
-
-  /* ===========================================
-     DIREITO PM
-     =========================================== */
-  function renderDisciplines() {
-    document.getElementById('dpm-count-disc').textContent = DISCIPLINAS.length;
-    const total = DISCIPLINAS.reduce((s, d) => s + d.subtopicos, 0);
-    document.getElementById('dpm-count-topicos').textContent = total + '+';
-
-    const q = (document.getElementById('dpm-search')?.value || '').toLowerCase();
-    const list = document.getElementById('discipline-list');
-    list.innerHTML = '';
-
-    DISCIPLINAS
-      .filter(d => !q || d.nome.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q)
-        || d.grupos.some(g => g.nome.toLowerCase().includes(q) || g.subs.some(s => s.toLowerCase().includes(q))))
-      .forEach(d => {
-        const percentCls = d.editais >= 90 ? '' : d.editais >= 70 ? 'mid' : 'low';
-        const div = document.createElement('a');
-        div.className = 'discipline-row';
-        div.onclick = () => showDisciplineDetail(d.id);
-        div.innerHTML = `
-          <div class="discipline-icon">${iconSvg(d.icon)}</div>
-          <div class="discipline-info">
-            <div class="discipline-title">
-              ${d.nome}
-              <span class="discipline-percent ${percentCls}">${d.editais}% editais</span>
-            </div>
-            <div class="discipline-desc">${d.desc}</div>
-          </div>
-          <div class="discipline-meta">
-            ${d.subtopicos} subtópicos
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          </div>
-        `;
-        list.appendChild(div);
-      });
-  }
-
-  function subtopicId(discId, groupIdx, subIdx) {
-    return `${discId}__${groupIdx}__${subIdx}`;
-  }
-
-  function isStudied(id) {
-    return !!(state.progresso && state.progresso[id]);
-  }
-
-  function toggleStudied(discId, groupIdx, subIdx) {
-    const id = subtopicId(discId, groupIdx, subIdx);
-    state.progresso[id] = !state.progresso[id];
-    localStorage.setItem('ct_progresso', JSON.stringify(state.progresso));
-    // Update element in-place
-    const el = document.querySelector(`[data-sub-id="${id}"]`);
-    if (el) {
-      el.classList.toggle('studied', state.progresso[id]);
-    }
-    updateGroupProgress(discId);
-    updateDisciplineProgress(discId);
-  }
-
-  function updateGroupProgress(discId) {
-    const d = DISCIPLINAS.find(x => x.id === discId);
-    if (!d) return;
-    d.grupos.forEach((g, gi) => {
-      const done = g.subs.filter((_, si) => isStudied(subtopicId(discId, gi, si))).length;
-      const total = g.subs.length;
-      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-      const progEl = document.querySelector(`[data-group-progress="${discId}-${gi}"]`);
-      if (progEl) {
-        progEl.querySelector('.gp-fill').style.width = pct + '%';
-        progEl.querySelector('.gp-text').textContent = `${done}/${total}`;
-      }
-    });
-  }
-
-  function updateDisciplineProgress(discId) {
-    const d = DISCIPLINAS.find(x => x.id === discId);
-    if (!d) return;
-    let done = 0, total = 0;
-    d.grupos.forEach((g, gi) => {
-      g.subs.forEach((_, si) => {
-        total++;
-        if (isStudied(subtopicId(discId, gi, si))) done++;
-      });
-    });
-    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-    const el = document.getElementById('disc-overall-progress');
-    if (el) {
-      el.querySelector('.gp-fill').style.width = pct + '%';
-      el.querySelector('.gp-text').textContent = `${done}/${total} estudados · ${pct}%`;
-    }
-  }
-
-  // Handle click vs dblclick on a subtopic (both bind to same element)
-  const SUB_CLICK_TIMERS = {};
-  function onSubClick(discId, gi, si) {
-    const key = subtopicId(discId, gi, si);
-    if (SUB_CLICK_TIMERS[key]) {
-      // Second click arrived — this is dblclick; cancel pending single-click
-      clearTimeout(SUB_CLICK_TIMERS[key]);
-      delete SUB_CLICK_TIMERS[key];
-      openStudyModal(discId, gi, si);
-    } else {
-      // Wait to see if another click arrives
-      SUB_CLICK_TIMERS[key] = setTimeout(() => {
-        delete SUB_CLICK_TIMERS[key];
-        toggleStudied(discId, gi, si);
-      }, 250);
-    }
-  }
-
-  function openStudyModal(discId, gi, si) {
-    const d = DISCIPLINAS.find(x => x.id === discId);
-    if (!d) return;
-    const grupo = d.grupos[gi];
-    const sub = grupo.subs[si];
-    const id = subtopicId(discId, gi, si);
-    const studied = isStudied(id);
-    const modal = document.getElementById('study-modal');
-    modal.querySelector('.sm-discipline').textContent = d.nome;
-    modal.querySelector('.sm-group').textContent = grupo.nome;
-    modal.querySelector('.sm-title').textContent = sub;
-    const mark = modal.querySelector('#sm-mark');
-    mark.innerHTML = studied
-      ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Estudado'
-      : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg> Marcar como estudado';
-    mark.classList.toggle('studied', studied);
-    mark.onclick = () => {
-      toggleStudied(discId, gi, si);
-      openStudyModal(discId, gi, si); // refresh modal state
-    };
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeStudyModal() {
-    document.getElementById('study-modal').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  function showDisciplineDetail(id) {
-    const d = DISCIPLINAS.find(x => x.id === id);
-    if (!d) return;
-    document.getElementById('direito-pm-list-view').style.display = 'none';
-    document.getElementById('direito-pm-detail-view').style.display = 'block';
-    const content = document.getElementById('detail-content');
-
-    // Compute totals
-    let doneAll = 0, totalAll = 0;
-    d.grupos.forEach((g, gi) => {
-      g.subs.forEach((_, si) => {
-        totalAll++;
-        if (isStudied(subtopicId(d.id, gi, si))) doneAll++;
-      });
-    });
-    const pctAll = totalAll ? Math.round((doneAll / totalAll) * 100) : 0;
-
-    content.innerHTML = `
-      <div class="section-header">
-        <div class="section-icon primary">${iconSvg(d.icon)}</div>
-        <div>
-          <h2 class="section-title">${d.nome.toUpperCase()}</h2>
-          <p class="section-subtitle">${d.desc}</p>
-        </div>
-      </div>
-      <div class="stats-pills">
-        <span class="stat-pill"><strong>${d.editais}%</strong><span class="stat-label">Frequência</span></span>
-        <span class="stat-pill"><strong>${d.subtopicos}</strong><span class="stat-label">Subtópicos</span></span>
-        <span class="stat-pill"><strong>${d.grupos.length}</strong><span class="stat-label">Grupos</span></span>
-        <span class="stat-pill"><strong>${d.avgQuestoes}q.</strong><span class="stat-label">Média/Prova</span></span>
-      </div>
-
-      <!-- Overall discipline progress -->
-      <div id="disc-overall-progress" class="disc-progress">
-        <div class="disc-progress-top">
-          <span class="disc-progress-label">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            Progresso Geral
-          </span>
-          <span class="gp-text">${doneAll}/${totalAll} estudados · ${pctAll}%</span>
-        </div>
-        <div class="gp-track"><div class="gp-fill" style="width:${pctAll}%"></div></div>
-      </div>
-
-      <div class="hint-banner">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        <span><strong>Clique</strong> num subtópico para marcar como estudado · <strong>duplo clique</strong> para abrir o painel de estudo</span>
-      </div>
-
-      ${d.grupos.map((g, gi) => {
-        const gDone = g.subs.filter((_, si) => isStudied(subtopicId(d.id, gi, si))).length;
-        const gTotal = g.subs.length;
-        const gPct = gTotal ? Math.round((gDone / gTotal) * 100) : 0;
-        return `
-        <div class="grupo-block">
-          <h3 class="grupo-title">
-            <span class="grupo-num">${String(gi + 1).padStart(2, '0')}</span>
-            <span class="grupo-name">${g.nome}</span>
-            <span class="grupo-progress" data-group-progress="${d.id}-${gi}">
-              <span class="gp-text">${gDone}/${gTotal}</span>
-              <span class="gp-track"><span class="gp-fill" style="width:${gPct}%"></span></span>
-            </span>
-          </h3>
-          <div class="grupo-subs">
-            ${g.subs.map((s, si) => {
-              const sid = subtopicId(d.id, gi, si);
-              const isDone = isStudied(sid);
-              return `
-              <div class="grupo-sub-item ${isDone ? 'studied' : ''}"
-                   data-sub-id="${sid}"
-                   onclick="onSubClick('${d.id}', ${gi}, ${si})"
-                   title="Clique: marcar · Duplo clique: abrir">
-                <span class="grupo-sub-check">
-                  <svg class="sc-empty" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg>
-                  <svg class="sc-done" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                </span>
-                <span class="grupo-sub-text">${s}</span>
-                <span class="grupo-sub-open" title="Abrir painel de estudo">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
-                </span>
-              </div>
-            `;
-            }).join('')}
-          </div>
-        </div>
-      `;
-      }).join('')}
-    `;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function backToDisciplines() {
-    document.getElementById('direito-pm-list-view').style.display = 'block';
-    document.getElementById('direito-pm-detail-view').style.display = 'none';
-  }
-
-  /* ===========================================
-     BANCAS
-     =========================================== */
-  function renderBancas() {
-    document.getElementById('bancas-count').textContent = BANCAS.length;
-
-    // Filters
-    const filters = document.getElementById('bancas-filters');
-    filters.innerHTML = '<button class="banca-filter active" data-banca="all" onclick="filterBancas(\'all\', this)">Todas</button>' +
-      BANCAS.map(b => `<button class="banca-filter" data-banca="${b.id}" onclick="filterBancas('${b.id}', this)">${b.nome}</button>`).join('');
-
-    // Grid
-    renderBancasGrid('all');
-
-    // Subtopicos quentes — todos os subtópicos das disciplinas mais cobradas
-    const subtopicosDiv = document.getElementById('subtopicos-list');
-    const allSubs = [];
-    DISCIPLINAS.forEach(d => {
-      d.grupos.forEach(g => {
-        g.subs.forEach(s => {
-          allSubs.push({ sub: s, grupo: g.nome, disciplina: d.nome, editais: d.editais, discIcon: d.icon });
-        });
-      });
-    });
-    // Ordena: disciplinas com mais editais primeiro, e por grupo
-    allSubs.sort((a, b) => b.editais - a.editais);
-    const top = allSubs.slice(0, 40);
-    subtopicosDiv.innerHTML = top.map(t => `
-      <div class="topic-card">
-        <div class="topic-card-top">
-          <div style="flex:1;">
-            <div class="topic-name">${t.sub}</div>
-            <div style="font-size:.72rem;color:hsl(var(--muted-foreground));margin-top:4px;letter-spacing:.5px;">
-              <span style="color:hsl(var(--accent));font-weight:600;">${t.disciplina}</span>
-              <span style="margin:0 6px;opacity:.4;">›</span>
-              ${t.grupo}
-            </div>
-          </div>
-          <span class="topic-freq">🔥 ${t.editais}%</span>
-        </div>
-      </div>
-    `).join('');
-
-    // Charts
-    setTimeout(() => initCharts(), 100);
-  }
-
-  function renderBancasGrid(filter) {
-    const grid = document.getElementById('bancas-grid');
-    const items = filter === 'all' ? BANCAS : BANCAS.filter(b => b.id === filter);
-    grid.innerHTML = items.map(b => `
-      <div class="banca-card" onclick="showBancaDetail('${b.id}')">
-        <div class="banca-card-top">
-          <h3>${b.nome}</h3>
-          <span class="banca-tag ${b.tag}">${b.tagLabel}</span>
-        </div>
-        <div class="banca-full">${b.nomeFull}</div>
-        <div class="banca-estados">
-          ${b.estados.slice(0, 4).map(e => `<span class="banca-estado">${e}</span>`).join('')}
-          ${b.extras > 0 ? `<span class="banca-estado">+${b.extras}</span>` : ''}
-        </div>
-        <div class="banca-top">TOP: <strong>${b.top}</strong> (${b.topFreq}%)</div>
-      </div>
-    `).join('');
-  }
-
-  function filterBancas(id, btn) {
-    document.querySelectorAll('#bancas-filters .banca-filter').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderBancasGrid(id);
-  }
-
-  function showBancaDetail(id) {
-    const b = BANCAS.find(x => x.id === id);
-    if (!b) return;
-    showToast(`${b.nome}: ${b.editais} editais analisados`);
-  }
-
-  // Tabs
-  document.querySelectorAll('[data-bancas-tab]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('[data-bancas-tab]').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('.bancas-tab-content').forEach(t => t.style.display = 'none');
-      document.getElementById('bancas-tab-' + btn.dataset.bancasTab).style.display = 'block';
-      if (btn.dataset.bancasTab === 'ranking') setTimeout(() => initCharts(), 50);
-    });
-  });
-
-  /* ===========================================
-     CHARTS
-     =========================================== */
-  let charts = {};
-  function destroyCharts() {
-    Object.values(charts).forEach(c => c && c.destroy && c.destroy());
-    charts = {};
-  }
-
-  function initCharts() {
-    destroyCharts();
-
-    const discNomes = DISCIPLINAS.map(d => {
-      const n = d.nome.replace('Direito ', 'Dir. ').replace('Noções de Dir. ', 'Dir. ').replace('Processual', 'Proc.').replace('Legislação', 'Leg.');
-      return n.length > 22 ? n.substring(0, 20) + '…' : n;
-    });
-    const discFreq = DISCIPLINAS.map(d => d.editais);
-    const palette = ['#6a8a3d', '#c8972a', '#4a7a7c', '#7a4a8c', '#8c4a4a', '#4a7c59', '#3a6b8c', '#c87a40', '#5a8c6a', '#9a5a5a'];
-
-    const commonOpts = {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 600 },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: 'rgba(10,20,40,.95)',
-          borderColor: 'rgba(201,168,76,.4)',
-          borderWidth: 1,
-          titleFont: { family: 'Oswald', size: 12, weight: '600' },
-          titleColor: '#e8d48a',
-          bodyFont: { family: 'Inter', size: 12 },
-          bodyColor: '#e8e1c8',
-          padding: 10
-        }
-      }
-    };
-
-    // Chart 1: Frequency bar
-    if (document.getElementById('chart-frequencia')) {
-      charts.freq = new Chart(document.getElementById('chart-frequencia'), {
-        type: 'bar',
-        data: {
-          labels: discNomes,
-          datasets: [{
-            data: discFreq,
-            backgroundColor: palette,
-            borderRadius: 3,
-            barThickness: 14
-          }]
-        },
-        options: {
-          ...commonOpts,
-          indexAxis: 'y',
-          scales: {
-            x: {
-              max: 100,
-              ticks: { color: '#8594a8', font: { family: 'Inter', size: 10 } },
-              grid: { color: 'rgba(255,255,255,.04)' }
-            },
-            y: {
-              ticks: { color: '#b8c0a8', font: { family: 'Inter', size: 11 } },
-              grid: { display: false }
-            }
-          }
-        }
-      });
-    }
-
-    // Chart 2: avg questions
-    if (document.getElementById('chart-questoes')) {
-      const avgQ = DISCIPLINAS.map(d => d.avgQuestoes);
-      charts.qst = new Chart(document.getElementById('chart-questoes'), {
-        type: 'bar',
-        data: {
-          labels: discNomes,
-          datasets: [{
-            data: avgQ,
-            backgroundColor: palette,
-            borderRadius: 3,
-            barThickness: 14
-          }]
-        },
-        options: {
-          ...commonOpts,
-          indexAxis: 'y',
-          scales: {
-            x: {
-              max: 14,
-              ticks: { color: '#8594a8', font: { family: 'Inter', size: 10 } },
-              grid: { color: 'rgba(255,255,255,.04)' }
-            },
-            y: {
-              ticks: { color: '#b8c0a8', font: { family: 'Inter', size: 11 } },
-              grid: { display: false }
-            }
-          }
-        }
-      });
-    }
-
-    // Chart 3: distribution (doughnut)
-    if (document.getElementById('chart-distribuicao')) {
-      const avgQ = DISCIPLINAS.map(d => d.avgQuestoes);
-      charts.dist = new Chart(document.getElementById('chart-distribuicao'), {
-        type: 'doughnut',
-        data: {
-          labels: DISCIPLINAS.map(d => d.nome),
-          datasets: [{
-            data: avgQ,
-            backgroundColor: palette,
-            borderColor: 'hsl(200, 22%, 9%)',
-            borderWidth: 2
-          }]
-        },
-        options: {
-          ...commonOpts,
-          cutout: '58%',
-          plugins: {
-            ...commonOpts.plugins,
-            legend: {
-              display: true,
-              position: 'right',
-              labels: {
-                color: '#e8e1c8',
-                font: { family: 'Inter', size: 11 },
-                padding: 10,
-                boxWidth: 12,
-                boxHeight: 12,
-                generateLabels: (chart) => {
-                  const data = chart.data;
-                  return data.labels.map((label, i) => ({
-                    text: `${label}  ${data.datasets[0].data[i]} q.`,
-                    fillStyle: data.datasets[0].backgroundColor[i],
-                    strokeStyle: data.datasets[0].backgroundColor[i],
-                    lineWidth: 0,
-                    hidden: false,
-                    index: i
-                  }));
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-  }
-
-  /* ===========================================
-     CRONOGRAMA WIZARD
-     =========================================== */
-  function renderWizardBancas() {
-    const list = document.getElementById('wizard-bancas-list');
-    list.innerHTML = `
-      <div class="banca-option ${state.wizardData.banca === 'custom' ? 'selected' : ''}" onclick="selectBanca('custom')">
-        <div class="banca-option-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-        <div class="banca-option-info">
-          <div class="banca-option-title">Personalizado (sem banca)</div>
-          <div class="banca-option-sub">Monte livremente sem perfil de banca</div>
-        </div>
-      </div>
+  </header>
+
+  <main>
+    <div id="page-home" class="page active">
+      <h1 class="section-title">Painel de Operações</h1>
       <div class="grid-2">
-        ${BANCAS.map(b => {
-          const top3 = Object.entries(b.materias).slice(0, 3);
-          return `
-            <div class="banca-option ${state.wizardData.banca === b.id ? 'selected' : ''}" onclick="selectBanca('${b.id}')">
-              <div class="banca-option-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-              <div class="banca-option-info">
-                <div class="banca-option-title">${b.nome}</div>
-                <div class="banca-option-sub">${b.nomeFull}</div>
-                <div class="banca-option-top">
-                  ${top3.map(([mat, pct]) => `<span class="material-chip">${mat} ${pct}%</span>`).join('')}
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('')}
+        <div class="card" onclick="navTo('cronograma')">
+          <div class="card-title">Gerador de Cronograma</div>
+          <p style="color:hsl(var(--muted-foreground)); font-size:0.9rem; margin-top:8px;">Crie seu plano de estudos tático baseado em peso e incidência.</p>
+        </div>
+        <div class="card" onclick="navTo('bancas')">
+          <div class="card-title">Análise de Bancas</div>
+          <p style="color:hsl(var(--muted-foreground)); font-size:0.9rem; margin-top:8px;">Veja o que Cebraspe, FGV e AOCP mais cobram.</p>
+        </div>
       </div>
-    `;
-  }
+    </div>
 
-  function selectBanca(id) {
-    state.wizardData.banca = id;
-    renderWizardBancas();
-  }
+    <div id="page-cronograma" class="page">
+      <div class="wizard-container">
+        <h1 class="section-title">Missão: Cronograma</h1>
+        
+        <div class="wizard-step active" data-step="1">
+          <h3>Selecione a Banca Alvo</h3>
+          <div class="option-list" id="wizard-bancas-list"></div>
+        </div>
 
-  function renderWizardMaterias() {
-    const list = document.getElementById('wizard-materias-list');
-    const banca = state.wizardData.banca;
-    // If banca selected, pre-select materias from its profile
-    if (banca && banca !== 'custom' && state.wizardData.materias.length === 0) {
-      const b = BANCAS.find(x => x.id === banca);
-      // Match first 5 disciplines approximately
-      state.wizardData.materias = DISCIPLINAS.slice(0, 6).map(d => d.id);
-    } else if (state.wizardData.materias.length === 0) {
-      state.wizardData.materias = DISCIPLINAS.filter(d => d.editais >= 80).map(d => d.id);
-    }
+        <div class="wizard-step" data-step="2">
+          <h3>Disciplinas da Prova</h3>
+          <p style="font-size: 0.8rem; color: hsl(var(--muted-foreground)); margin-bottom: 1rem;">Marque as matérias que constam no seu edital.</p>
+          <div class="option-list" id="wizard-materias-list"></div>
+        </div>
 
-    list.innerHTML = DISCIPLINAS.map(d => {
-      const selected = state.wizardData.materias.includes(d.id);
-      return `
-        <div class="banca-option ${selected ? 'selected' : ''}" onclick="toggleMateria('${d.id}')">
-          <div class="banca-option-check"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-          <div class="banca-option-info">
-            <div class="banca-option-title">${d.nome}</div>
-            <div class="banca-option-sub">${d.desc}</div>
-            <div class="banca-option-top">
-              <span class="material-chip">${d.editais}% editais</span>
-              <span class="material-chip">${d.subtopicos} subtópicos</span>
+        <div class="wizard-step" data-step="3">
+          <h3>Sua Disponibilidade</h3>
+          <div class="option-list">
+            <div style="margin-bottom: 1.5rem;">
+              <label style="display:block; margin-bottom:8px; font-weight:600;">Horas de estudo por dia:</label>
+              <input type="range" id="input-hours" min="1" max="12" value="4" style="width:100%;" oninput="document.getElementById('val-hours').innerText = this.value + 'h'">
+              <div id="val-hours" style="text-align:right; font-family:var(--font-mono); color:hsl(var(--primary));">4h</div>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+              <label style="display:block; margin-bottom:8px; font-weight:600;">Dias por semana:</label>
+              <input type="range" id="input-days" min="1" max="7" value="6" style="width:100%;" oninput="document.getElementById('val-days').innerText = this.value + ' dias'">
+              <div id="val-days" style="text-align:right; font-family:var(--font-mono); color:hsl(var(--primary));">6 dias</div>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+              <label style="display:block; margin-bottom:8px; font-weight:600;">Duração do plano (semanas):</label>
+              <input type="range" id="input-weeks" min="1" max="24" value="8" style="width:100%;" oninput="document.getElementById('val-weeks').innerText = this.value + ' semanas'">
+              <div id="val-weeks" style="text-align:right; font-family:var(--font-mono); color:hsl(var(--primary));">8 semanas</div>
             </div>
           </div>
         </div>
-      `;
-    }).join('');
-  }
 
-  function toggleMateria(id) {
-    const idx = state.wizardData.materias.indexOf(id);
-    if (idx === -1) state.wizardData.materias.push(id);
-    else state.wizardData.materias.splice(idx, 1);
-    renderWizardMaterias();
-  }
-
-  function renderRevisao() {
-    const d = state.wizardData;
-    const bancaNome = d.banca === 'custom' ? 'Personalizado' : (BANCAS.find(b => b.id === d.banca)?.nome || '—');
-    const materias = d.materias.map(id => DISCIPLINAS.find(x => x.id === id)?.nome).filter(Boolean);
-    document.getElementById('revisao-content').innerHTML = `
-      <div class="result-summary">
-        <div class="result-stat"><div class="result-stat-label">Banca</div><div class="result-stat-value">${bancaNome}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Matérias</div><div class="result-stat-value">${materias.length}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Horas/dia</div><div class="result-stat-value">${d.horas}h</div></div>
-        <div class="result-stat"><div class="result-stat-label">Dias/semana</div><div class="result-stat-value">${d.dias}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Semanas</div><div class="result-stat-value">${d.semanas}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Total de horas</div><div class="result-stat-value">${d.horas * d.dias * d.semanas}h</div></div>
-      </div>
-      <h4 style="font-family:var(--font-heading);font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;color:hsl(var(--accent));margin:20px 0 10px;">Matérias Selecionadas</h4>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;">
-        ${materias.map(m => `<span class="material-chip" style="padding:6px 12px;font-size:.8rem;">${m}</span>`).join('')}
-      </div>
-    `;
-  }
-
-  function wizardGenerate() {
-    // Build a weekly cronograma (simplified): distribute materias across weekdays, proportional to their freq
-    const d = state.wizardData;
-    const materias = d.materias.map(id => DISCIPLINAS.find(x => x.id === id)).filter(Boolean);
-    const weights = materias.map(m => m.editais);
-    const totalWeight = weights.reduce((s, w) => s + w, 0);
-
-    // For each of 4 sample weeks, distribute
-    const weeks = [];
-    for (let w = 1; w <= Math.min(4, d.semanas); w++) {
-      const days = [];
-      const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-      for (let day = 0; day < d.dias; day++) {
-        // Rotate materias through days, giving more weight to high-freq
-        const matIdx = (w * 7 + day) % materias.length;
-        const m = materias[matIdx];
-        // Pick a group and then a subtopic from the new grupos structure
-        const grupo = m.grupos[(w + day) % m.grupos.length];
-        const sub = grupo.subs[(w + day) % grupo.subs.length];
-        days.push({
-          day: dayNames[day],
-          materia: m.nome,
-          grupo: grupo.nome,
-          topico: sub,
-          horas: d.horas
-        });
-      }
-      weeks.push({ num: w, days });
-    }
-
-    const bancaNome = d.banca === 'custom' ? 'Personalizado' : (BANCAS.find(b => b.id === d.banca)?.nome || '—');
-
-    document.getElementById('cronograma-result').innerHTML = `
-      <div class="result-summary">
-        <div class="result-stat"><div class="result-stat-label">Banca</div><div class="result-stat-value">${bancaNome}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Total Horas</div><div class="result-stat-value">${d.horas * d.dias * d.semanas}h</div></div>
-        <div class="result-stat"><div class="result-stat-label">Matérias</div><div class="result-stat-value">${materias.length}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Semanas</div><div class="result-stat-value">${d.semanas}</div></div>
-      </div>
-      <p style="color:hsl(var(--muted-foreground));font-size:.85rem;margin-bottom:16px;">Amostra das primeiras ${weeks.length} semanas (de ${d.semanas} totais). O cronograma completo distribui tópicos proporcionalmente à frequência em editais.</p>
-      ${weeks.map(wk => `
-        <div class="cronograma-week">
-          <h4>Semana ${wk.num}</h4>
-          ${wk.days.map(day => `
-            <div class="cronograma-day">
-              <span class="cronograma-day-label">${day.day}</span>
-              <div class="cronograma-day-subject">
-                <strong>${day.materia}</strong>
-                <span style="color:hsl(var(--accent));font-size:.78rem;margin-left:6px;">${day.grupo}</span>
-                <div style="color:hsl(var(--muted-foreground));font-size:.8rem;margin-top:2px;">${day.topico}</div>
-              </div>
-              <span class="cronograma-day-hours">${day.horas}h</span>
-            </div>
-          `).join('')}
-        </div>
-      `).join('')}
-    `;
-    wizardGoStep(5);
-  }
-
-  function wizardNext() {
-    if (state.wizardStep === 1 && !state.wizardData.banca) {
-      showToast('Selecione uma banca');
-      return;
-    }
-    if (state.wizardStep === 2 && state.wizardData.materias.length === 0) {
-      showToast('Selecione ao menos uma matéria');
-      return;
-    }
-    wizardGoStep(state.wizardStep + 1);
-  }
-
-  function wizardPrev() { wizardGoStep(state.wizardStep - 1); }
-
-  function wizardGoStep(n) {
-    if (n < 1 || n > 5) return;
-    const prev = state.wizardStep;
-    state.wizardStep = n;
-    // Panels
-    for (let i = 1; i <= 5; i++) {
-      document.getElementById('wizard-panel-' + i).style.display = i === n ? 'block' : 'none';
-    }
-    // Stepper
-    document.querySelectorAll('.wizard-step').forEach(s => {
-      const sn = +s.dataset.step;
-      s.classList.remove('active', 'done');
-      if (sn < n) s.classList.add('done');
-      else if (sn === n) s.classList.add('active');
-    });
-    // Load step data
-    if (n === 2) renderWizardMaterias();
-    if (n === 4) renderRevisao();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function wizardReset() {
-    state.wizardStep = 1;
-    state.wizardData = { banca: null, materias: [], horas: 4, dias: 6, semanas: 16 };
-    document.getElementById('horas-range').value = 4;
-    document.getElementById('dias-range').value = 6;
-    document.getElementById('semanas-range').value = 16;
-    document.getElementById('horas-value').textContent = 4;
-    document.getElementById('dias-value').textContent = 6;
-    document.getElementById('semanas-value').textContent = 16;
-    wizardGoStep(1);
-    renderWizardBancas();
-  }
-
-  function saveCronograma() {
-    const d = state.wizardData;
-    const bancaNome = d.banca === 'custom' ? 'Personalizado' : (BANCAS.find(b => b.id === d.banca)?.nome || '—');
-    const entry = {
-      id: Date.now(),
-      tipo: 'cronograma',
-      titulo: `Cronograma ${bancaNome}`,
-      banca: bancaNome,
-      materias: d.materias.length,
-      horas: d.horas,
-      dias: d.dias,
-      semanas: d.semanas,
-      data: new Date().toISOString()
-    };
-    state.history.unshift(entry);
-    localStorage.setItem('ct_history', JSON.stringify(state.history));
-    showToast('Cronograma salvo!');
-    goTo('historico');
-  }
-
-  // Sync sliders into state
-  document.addEventListener('input', (e) => {
-    if (e.target.id === 'horas-range') state.wizardData.horas = +e.target.value;
-    if (e.target.id === 'dias-range') state.wizardData.dias = +e.target.value;
-    if (e.target.id === 'semanas-range') state.wizardData.semanas = +e.target.value;
-  });
-
-  /* ===========================================
-     ANÁLISE
-     =========================================== */
-  function handleFileUpload(input) {
-    const file = input.files[0];
-    if (!file) return;
-    document.getElementById('upload-text').textContent = `✓ ${file.name}`;
-  }
-
-  function iniciarAnalise() {
-    const text = document.getElementById('edital-text').value.trim();
-    const hasFile = document.getElementById('upload-text').textContent.startsWith('✓');
-    if (!text && !hasFile) {
-      showToast('Envie um arquivo ou cole o texto do edital');
-      return;
-    }
-    const horas = +document.getElementById('analise-horas').value;
-    const entry = {
-      id: Date.now(),
-      tipo: 'analise',
-      titulo: `Análise de edital`,
-      horas,
-      chars: text.length,
-      data: new Date().toISOString()
-    };
-    state.history.unshift(entry);
-    localStorage.setItem('ct_history', JSON.stringify(state.history));
-    showToast('Análise iniciada. Redirecionando...');
-    setTimeout(() => {
-      state.wizardData.horas = horas;
-      goTo('cronograma');
-    }, 800);
-  }
-
-  /* ===========================================
-     HISTÓRICO
-     =========================================== */
-  function renderHistorico() {
-    const container = document.getElementById('historico-content');
-    if (state.history.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>
-          <h4>Nenhum item no histórico</h4>
-          <p>Cronogramas e análises que você criar aparecerão aqui.</p>
-        </div>
-      `;
-      return;
-    }
-    container.innerHTML = `<div class="historico-list">${state.history.map(h => {
-      const isCron = h.tipo === 'cronograma';
-      const icon = isCron
-        ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>'
-        : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>';
-      const dt = new Date(h.data).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-      const meta = isCron
-        ? `<span>📚 ${h.materias} matérias</span><span>⏱ ${h.horas}h/dia</span><span>📅 ${h.semanas}s</span><span>🎯 ${h.banca}</span>`
-        : `<span>⏱ ${h.horas}h/dia</span><span>📝 ${h.chars} caracteres</span>`;
-      return `
-        <div class="hist-item">
-          <div class="hist-icon">${icon}</div>
-          <div class="hist-info">
-            <div class="hist-title">${h.titulo}</div>
-            <div class="hist-meta">
-              <span>🕐 ${dt}</span>
-              ${meta}
-            </div>
+        <div class="wizard-step" data-step="4">
+          <div style="text-align:center; padding: 3rem 0;">
+            <h3 style="margin-bottom:1rem;">Processando Inteligência Tática...</h3>
+            <div style="width:40px; height:40px; border:4px solid hsl(var(--muted)); border-top-color:hsl(var(--primary)); border-radius:50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
           </div>
-          <a class="hist-action" onclick="event.stopPropagation(); deleteHistItem(${h.id})">Remover</a>
         </div>
-      `;
-    }).join('')}</div>`;
-  }
 
-  function deleteHistItem(id) {
-    state.history = state.history.filter(h => h.id !== id);
-    localStorage.setItem('ct_history', JSON.stringify(state.history));
-    renderHistorico();
-    showToast('Item removido');
-  }
+        <div class="wizard-step" data-step="5">
+          <h3>Seu Cronograma Tático</h3>
+          <div id="cronograma-result"></div>
+          <button class="btn btn-secondary" style="width:100%; margin-top:1.5rem;" onclick="window.print()">Salvar em PDF</button>
+        </div>
 
-  /* ===========================================
-     PESQUISA
-     =========================================== */
-  function runSearch() {
-    const q = document.getElementById('pesq-input').value.trim().toLowerCase();
-    const results = document.getElementById('pesq-results');
-    if (!q) { results.innerHTML = ''; return; }
-    const found = [];
+        <div class="wizard-actions" id="wizard-buttons">
+          <button class="btn btn-secondary" onclick="wizardPrev()">Voltar</button>
+          <button class="btn btn-primary" onclick="wizardNext()">Avançar</button>
+        </div>
+      </div>
+    </div>
 
-    // Disciplinas + Grupos + Subtópicos
-    DISCIPLINAS.forEach(d => {
-      if (d.nome.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q)) {
-        found.push({ type: 'Disciplina', title: d.nome, desc: d.desc, goto: () => { goTo('direito-pm'); setTimeout(() => showDisciplineDetail(d.id), 100); } });
+    <div id="page-bancas" class="page">
+      <h1 class="section-title">Análise de Bancas</h1>
+      <div id="bancas-grid" class="grid-2"></div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="navTo('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </div>
+    <div class="nav-item" onclick="navTo('cronograma')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+      Plano
+    </div>
+    <div class="nav-item" onclick="navTo('bancas')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>
+      Bancas
+    </div>
+  </nav>
+
+  <div id="toast">Operação realizada</div>
+
+  <script>
+    /* ===========================================
+       BASE DE DADOS TÁTICA
+       =========================================== */
+    const DISCIPLINAS = [
+      { id: 'const', nome: 'Dir. Constitucional', editais: 95, grupos: [
+          { nome: 'Direitos Fundamentais', subs: ['Art. 5º (Individuais)', 'Direitos Sociais', 'Nacionalidade'] },
+          { nome: 'Org. do Estado', subs: ['Competências da União', 'Administração Pública'] },
+          { nome: 'Segurança Pública', subs: ['Art. 144 da CF'] }
+      ]},
+      { id: 'penal', nome: 'Direito Penal', editais: 92, grupos: [
+          { nome: 'Teoria do Crime', subs: ['Fato Típico', 'Ilicitude', 'Culpabilidade'] },
+          { nome: 'Crimes Contra Pessoa', subs: ['Homicídio', 'Lesão Corporal'] },
+          { nome: 'Crimes Adm. Pública', subs: ['Peculato', 'Concussão', 'Corrupção'] }
+      ]},
+      { id: 'pm_esp', nome: 'Legislação PMPE', editais: 100, grupos: [
+          { nome: 'Estatuto PMPE', subs: ['Direitos e Deveres', 'Hierarquia', 'Regime Disciplinar'] }
+      ]},
+      { id: 'port', nome: 'Português', editais: 100, grupos: [
+          { nome: 'Gramática', subs: ['Crase', 'Pontuação', 'Concordância'] },
+          { nome: 'Interpretação', subs: ['Tipologia Textual', 'Coesão'] }
+      ]}
+    ];
+
+    const BANCAS = [
+      { id: 'cebraspe', nome: 'Cebraspe', materias: { 'Português': 25, 'Direito Penal': 20, 'Constitucional': 15, 'Raciocínio Lógico': 10 } },
+      { id: 'fgv', nome: 'FGV', materias: { 'Português': 30, 'Direito Penal': 15, 'Direito Administrativo': 15 } },
+      { id: 'aocp', nome: 'Instituto AOCP', materias: { 'Legislação PM': 25, 'Português': 20, 'Informática': 15 } },
+      { id: 'custom', nome: 'Personalizado', materias: {} }
+    ];
+
+    let state = {
+      currentPage: 'home',
+      wizardStep: 1,
+      wizardData: { banca: null, materias: [], horas: 4, dias: 6, semanas: 8 }
+    };
+
+    /* ===========================================
+       NAVEGAÇÃO
+       =========================================== */
+    function navTo(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + pageId).classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      // Atualiza ícone ativo
+      const items = document.querySelectorAll('.nav-item');
+      if(pageId === 'home') items.classList.add('active');
+      if(pageId === 'cronograma') items.classList.add('active');
+      if(pageId === 'bancas') items.classList.add('active');
+      state.currentPage = pageId;
+    }
+
+    /* ===========================================
+       LÓGICA DO WIZARD
+       =========================================== */
+    function renderWizardOptions() {
+      // Bancas
+      const bList = document.getElementById('wizard-bancas-list');
+      bList.innerHTML = BANCAS.map(b => `
+        <div class="option-item ${state.wizardData.banca === b.id ? 'selected' : ''}" onclick="selectBanca('${b.id}')">
+          <span>${b.nome}</span>
+          ${state.wizardData.banca === b.id ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+        </div>
+      `).join('');
+
+      // Matérias
+      const mList = document.getElementById('wizard-materias-list');
+      mList.innerHTML = DISCIPLINAS.map(m => `
+        <div class="option-item ${state.wizardData.materias.includes(m.id) ? 'selected' : ''}" onclick="toggleMateria('${m.id}')">
+          <span>${m.nome}</span>
+          <input type="checkbox" ${state.wizardData.materias.includes(m.id) ? 'checked' : ''} style="pointer-events:none">
+        </div>
+      `).join('');
+    }
+
+    function selectBanca(id) { state.wizardData.banca = id; renderWizardOptions(); }
+    function toggleMateria(id) {
+      const idx = state.wizardData.materias.indexOf(id);
+      if(idx > -1) state.wizardData.materias.splice(idx, 1);
+      else state.wizardData.materias.push(id);
+      renderWizardOptions();
+    }
+
+    function wizardNext() {
+      if(state.wizardStep === 1 && !state.wizardData.banca) return showToast('Selecione uma banca');
+      if(state.wizardStep === 2 && state.wizardData.materias.length === 0) return showToast('Selecione ao menos 1 matéria');
+      
+      if(state.wizardStep === 3) {
+        state.wizardData.horas = parseInt(document.getElementById('input-hours').value);
+        state.wizardData.dias = parseInt(document.getElementById('input-days').value);
+        state.wizardData.semanas = parseInt(document.getElementById('input-weeks').value);
+        wizardGoStep(4);
+        setTimeout(wizardGenerate, 1500);
+        return;
       }
-      d.grupos.forEach(g => {
-        if (g.nome.toLowerCase().includes(q)) {
-          found.push({ type: 'Grupo', title: g.nome, desc: `${d.nome} · ${g.subs.length} subtópicos`, goto: () => { goTo('direito-pm'); setTimeout(() => showDisciplineDetail(d.id), 100); } });
+
+      state.wizardStep++;
+      wizardGoStep(state.wizardStep);
+    }
+
+    function wizardPrev() {
+      if(state.wizardStep === 1) return navTo('home');
+      state.wizardStep--;
+      wizardGoStep(state.wizardStep);
+    }
+
+    function wizardGoStep(n) {
+      state.wizardStep = n;
+      document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+      document.querySelector(`.wizard-step[data-step="${n}"]`).classList.add('active');
+      document.getElementById('wizard-buttons').style.display = (n === 4 || n === 5) ? 'none' : 'flex';
+    }
+
+    /* ===========================================
+       ALGORITMO AVANÇADO DE CRONOGRAMA
+       =========================================== */
+    class RastreadorMateria {
+      constructor(disciplina) {
+        this.disciplina = disciplina;
+        this.grupoAtual = 0;
+        this.subAtual = 0;
+      }
+      proximoTopico() {
+        let grupo = this.disciplina.grupos[this.grupoAtual];
+        if (!grupo) return { grupo: "Revisão Geral", topico: "Simulados e Questões" };
+        let topico = grupo.subs[this.subAtual];
+        this.subAtual++;
+        if (this.subAtual >= grupo.subs.length) { this.subAtual = 0; this.grupoAtual++; }
+        return { grupo: grupo.nome, topico: topico };
+      }
+    }
+
+    function wizardGenerate() {
+      const d = state.wizardData;
+      const materiasIds = d.materias;
+      
+      // 1. Pesos Baseados na Banca
+      const banca = BANCAS.find(b => b.id === d.banca);
+      let filaCiclo = [];
+      materiasIds.forEach(id => {
+        let disc = DISCIPLINAS.find(x => x.id === id);
+        let peso = 10;
+        // Se a banca tem peso definido para essa matéria
+        if(banca && banca.materias) {
+          const match = Object.keys(banca.materias).find(k => disc.nome.includes(k));
+          if(match) peso = banca.materias[match];
         }
-        g.subs.forEach(s => {
-          if (s.toLowerCase().includes(q)) {
-            found.push({ type: 'Subtópico', title: s, desc: `${d.nome} › ${g.nome}`, goto: () => { goTo('direito-pm'); setTimeout(() => showDisciplineDetail(d.id), 100); } });
-          }
-        });
+        // Adiciona à fila proporcionalmente ao peso
+        let slots = Math.max(1, Math.round(peso / 5));
+        for(let i=0; i<slots; i++) filaCiclo.push(id);
       });
-    });
+      filaCiclo = filaCiclo.sort(() => Math.random() - 0.5);
+      let pCiclo = 0;
 
-    // Bancas
-    BANCAS.forEach(b => {
-      if (b.nome.toLowerCase().includes(q) || b.nomeFull.toLowerCase().includes(q) ||
-          b.estados.some(e => e.toLowerCase().includes(q))) {
-        found.push({ type: 'Banca', title: b.nome, desc: `${b.nomeFull} · ${b.editais} editais`, goto: () => goTo('bancas') });
-      }
-    });
+      const rastreadores = {};
+      materiasIds.forEach(id => rastreadores[id] = new RastreadorMateria(DISCIPLINAS.find(x => x.id === id)));
 
-    // Estados
-    ESTADOS_BR.forEach(e => {
-      if (e.toLowerCase().includes(q) || ('pm' + e).toLowerCase().includes(q)) {
-        const bancas = BANCAS.filter(b => b.estados.some(s => s.includes(e)));
-        if (bancas.length > 0) {
-          found.push({ type: 'Estado', title: `PM ${e}`, desc: `Bancas: ${bancas.map(b => b.nome).join(', ')}`, goto: () => goTo('bancas') });
-        }
-      }
-    });
-
-    if (found.length === 0) {
-      results.innerHTML = `<div class="empty-state">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <h4>Nenhum resultado</h4>
-        <p>Tente buscar por "Direito Penal", "CESPE", "SP", "artigo 121"…</p>
+      // 2. Geração das Semanas
+      let html = `<div class="result-summary">
+        <div class="result-stat"><div class="result-stat-label">Banca</div><div class="result-stat-value">${banca.nome}</div></div>
+        <div class="result-stat"><div class="result-stat-label">Total Horas</div><div class="result-stat-value">${d.horas * d.dias * d.semanas}h</div></div>
+        <div class="result-stat"><div class="result-stat-label">Matérias</div><div class="result-stat-value">${materiasIds.length}</div></div>
       </div>`;
-      return;
+
+      const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+      let globalDayCount = 0;
+
+      for (let w = 1; w <= Math.min(4, d.semanas); w++) {
+        html += `<div class="cronograma-week"><h4>Semana ${w}</h4>`;
+        for (let i = 0; i < d.dias; i++) {
+          globalDayCount++;
+          html += `<div class="cronograma-day">
+            <div style="font-weight:700; color:hsl(var(--primary)); margin-bottom:10px; font-size:0.8rem; text-transform:uppercase;">${diasSemana[i]} - ${d.horas}h Estudo</div>`;
+          
+          let hRestantes = d.horas;
+          
+          // Bloco de Revisão Espaçada (Sempre no início a partir do dia 2)
+          if(globalDayCount > 1 && hRestantes >= 1) {
+            html += `<div style="display:flex; gap:10px; margin-bottom:8px; font-size:0.85rem;">
+              <span style="color:hsl(var(--accent)); font-weight:700;">1h</span>
+              <div>
+                <span style="background:hsl(var(--accent)/.15); color:hsl(var(--accent)); padding:1px 4px; border-radius:3px; font-size:0.6rem; margin-right:5px;">REVISÃO</span>
+                <strong>Recuperação Ativa</strong><br>
+                <small style="color:hsl(var(--muted-foreground))">Questões do dia anterior e flashcards.</small>
+              </div>
+            </div>`;
+            hRestantes--;
+          }
+
+          // Ciclo de Matérias
+          while(hRestantes > 0) {
+            let hBloco = hRestantes >= 2 ? 2 : 1;
+            let mId = filaCiclo[pCiclo];
+            pCiclo = (pCiclo + 1) % filaCiclo.length;
+            let disc = DISCIPLINAS.find(x => x.id === mId);
+            let cont = rastreadores[mId].proximoTopico();
+
+            html += `<div style="display:flex; gap:10px; margin-bottom:8px; font-size:0.85rem;">
+              <span style="color:hsl(var(--muted-foreground)); font-weight:700;">${hBloco}h</span>
+              <div>
+                <strong>${disc.nome}</strong><br>
+                <small style="color:hsl(var(--muted-foreground))">${cont.grupo}: ${cont.topico}</small>
+              </div>
+            </div>`;
+            hRestantes -= hBloco;
+          }
+          html += `</div>`;
+        }
+        html += `</div>`;
+      }
+
+      document.getElementById('cronograma-result').innerHTML = html;
+      wizardGoStep(5);
     }
 
-    const highlight = (text, q) => text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark>$1</mark>');
+    /* ===========================================
+       AUXILIARES
+       =========================================== */
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
 
-    results.innerHTML = found.slice(0, 20).map((r, i) => `
-      <div class="pesq-result" onclick='_runGoto(${i})'>
-        <div class="pesq-result-top">
-          <span class="pesq-result-type">${r.type}</span>
-          <span class="pesq-result-title">${highlight(r.title, q)}</span>
+    function renderBancas() {
+      const grid = document.getElementById('bancas-grid');
+      grid.innerHTML = BANCAS.filter(b => b.id !== 'custom').map(b => `
+        <div class="card">
+          <div class="card-title">${b.nome}</div>
+          <div style="margin-top:10px;">
+            ${Object.entries(b.materias).map(([mat, peso]) => `
+              <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;">
+                <span>${mat}</span>
+                <span style="color:hsl(var(--primary)); font-weight:700;">${peso}%</span>
+              </div>
+            `).join('')}
+          </div>
         </div>
-        <div class="pesq-result-desc">${highlight(r.desc, q)}</div>
-      </div>
-    `).join('');
-    window._searchResults = found;
-  }
-  window._runGoto = (i) => {
-    const r = window._searchResults && window._searchResults[i];
-    if (r && r.goto) r.goto();
-  };
-
-  /* ===========================================
-     TOAST
-     =========================================== */
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>${msg}`;
-    t.classList.add('show');
-    clearTimeout(window._toastT);
-    window._toastT = setTimeout(() => t.classList.remove('show'), 2400);
-  }
-
-  /* ===========================================
-     INIT
-     =========================================== */
-  document.addEventListener('DOMContentLoaded', () => {
-    renderDisciplines();
-  });
-
-  // Escape closes study modal
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      const m = document.getElementById('study-modal');
-      if (m && m.classList.contains('open')) closeStudyModal();
+      `).join('');
     }
-  });
-</script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderWizardOptions();
+      renderBancas();
+    });
+
+  </script>
 </body>
 </html>
