@@ -81,30 +81,44 @@
   /* ===== NAV ===== */
   .nav {
     position: sticky; top: 0; z-index: 100;
-    background: hsl(var(--background) / .85);
+    background: hsl(var(--background) / .92);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid hsl(var(--border) / .5);
   }
   .nav-inner {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 0 24px;
-    height: 64px;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  .nav-row1 {
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    gap: 16px;
+    border-bottom: 1px solid hsl(var(--border) / .2);
   }
+  .nav-row2 {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 4px 0;
+  }
+  .nav-row2::-webkit-scrollbar { display: none; }
   .logo-link {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     text-decoration: none;
     color: inherit;
     flex-shrink: 0;
   }
   .logo-icon {
-    width: 40px; height: 40px;
+    width: 34px; height: 34px;
     background: hsl(var(--primary) / .2);
     border: 1px solid hsl(var(--primary) / .4);
     border-radius: var(--radius);
@@ -117,7 +131,7 @@
   .logo-link:hover .logo-icon { background: hsl(var(--primary) / .3); }
   .logo-text {
     font-family: var(--font-heading);
-    font-size: 1.1rem;
+    font-size: .95rem;
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -126,39 +140,34 @@
   .logo-text .accent { color: hsl(var(--accent)); }
   .logo-sub {
     font-family: var(--font-body);
-    font-size: .6rem;
+    font-size: .55rem;
     color: hsl(var(--muted-foreground));
     letter-spacing: 1.5px;
     text-transform: uppercase;
     margin-top: 2px;
   }
   .nav-links {
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    flex: 1;
-    justify-content: center;
+    display: contents;
   }
-  .nav-links::-webkit-scrollbar { display: none; }
   .nav-link {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
+    gap: 5px;
+    padding: 6px 10px;
     font-family: var(--font-heading);
-    font-size: .72rem;
+    font-size: .66rem;
     font-weight: 600;
     color: hsl(var(--muted-foreground));
     text-decoration: none;
     border: 1px solid transparent;
     border-radius: var(--radius);
-    letter-spacing: 1.5px;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
     transition: all .15s;
     white-space: nowrap;
     cursor: pointer;
     background: none;
+    flex-shrink: 0;
   }
   .nav-link:hover {
     color: hsl(var(--foreground));
@@ -169,13 +178,11 @@
     background: hsl(var(--primary) / .2);
     border-color: hsl(var(--primary) / .3);
   }
-  .nav-link svg { width: 14px; height: 14px; }
+  .nav-link svg { width: 13px; height: 13px; }
   .nav-user {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding-left: 12px;
-    border-left: 1px solid hsl(var(--border) / .4);
+    gap: 8px;
     flex-shrink: 0;
   }
   .nav-user-name {
@@ -2993,47 +3000,56 @@
 <!-- ============== NAV ============== -->
 <nav class="nav">
   <div class="nav-inner">
-    <a class="logo-link" data-page="base" onclick="goTo('base')">
-      <span class="logo-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-      </span>
-      <div>
-        <div class="logo-text">CONCURSO<span class="accent">TÁTICO</span></div>
-        <div class="logo-sub">Inteligência de Concursos</div>
+    <!-- Linha 1: logo + logout -->
+    <div class="nav-row1">
+      <a class="logo-link" data-page="base" onclick="goTo('base')">
+        <span class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </span>
+        <div>
+          <div class="logo-text">CONCURSO<span class="accent">TÁTICO</span></div>
+          <div class="logo-sub">Inteligência de Concursos PM</div>
+        </div>
+      </a>
+      <div class="nav-user">
+        <button class="nav-logout" title="Sair">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        </button>
       </div>
-    </a>
-
-    <div class="nav-links">
-      <button class="nav-link active" data-nav="base" onclick="goTo('base')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-        <span>Base</span>
-      </button>
-      <button class="nav-link" data-nav="direito-pm" onclick="goTo('direito-pm')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
-        <span>Direito PM</span>
-      </button>
-      <button class="nav-link" data-nav="bancas" onclick="goTo('bancas')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg>
-        <span>Bancas</span>
-      </button>
-      <button class="nav-link" data-nav="cronograma" onclick="goTo('cronograma')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
-        <span>Cronograma</span>
-      </button>
-      <button class="nav-link" data-nav="historico" onclick="goTo('historico')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-        <span>Histórico</span>
-      </button>
-      <button class="nav-link" data-nav="pesquisa" onclick="goTo('pesquisa')">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <span>Pesquisa</span>
-      </button>
     </div>
 
-    <div class="nav-user">
-      <button class="nav-logout" title="Sair">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-      </button>
+    <!-- Linha 2: links de navegação -->
+    <div class="nav-row2">
+      <div class="nav-links">
+        <button class="nav-link active" data-nav="base" onclick="goTo('base')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+          <span>Base</span>
+        </button>
+        <button class="nav-link" data-nav="direito-pm" onclick="goTo('direito-pm')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+          <span>Disciplinas</span>
+        </button>
+        <button class="nav-link" data-nav="bancas" onclick="goTo('bancas')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg>
+          <span>Bancas</span>
+        </button>
+        <button class="nav-link" data-nav="cronograma" onclick="goTo('cronograma')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+          <span>Cronograma</span>
+        </button>
+        <button class="nav-link" data-nav="historico" onclick="goTo('historico')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+          <span>Histórico</span>
+        </button>
+        <button class="nav-link" data-nav="revisao" onclick="goTo('revisao')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+          <span>Revisão</span>
+        </button>
+        <button class="nav-link" data-nav="pesquisa" onclick="goTo('pesquisa')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span>Pesquisa</span>
+        </button>
+      </div>
     </div>
   </div>
 </nav>
@@ -3081,6 +3097,13 @@
             <p>Seu edital</p>
           </a>
         </div>
+      </div>
+    </section>
+
+    <!-- ===== CRONOGRAMA ATIVO WIDGET ===== -->
+    <section class="section" style="padding-top:0;padding-bottom:0;" id="cronograma-dashboard-section">
+      <div class="section-inner">
+        <div id="cronograma-dashboard-widget"></div>
       </div>
     </section>
 
@@ -3310,13 +3333,9 @@
             <input type="range" id="dias-range" min="3" max="7" value="6" oninput="document.getElementById('dias-value').textContent = this.value;">
             <div class="slider-range"><span>3d</span><span>7d</span></div>
           </div>
-          <div class="slider-row">
-            <div class="slider-top">
-              <span class="field-label">Semanas até a prova</span>
-              <span class="slider-value"><span id="semanas-value">16</span>s</span>
-            </div>
-            <input type="range" id="semanas-range" min="4" max="52" value="16" oninput="document.getElementById('semanas-value').textContent = this.value;">
-            <div class="slider-range"><span>4s</span><span>52s</span></div>
+          <div style="margin-top:16px;padding:14px 18px;background:hsl(var(--primary)/.08);border:1px solid hsl(var(--primary)/.2);border-radius:var(--radius);font-size:.85rem;color:hsl(var(--muted-foreground));display:flex;align-items:center;gap:10px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="hsl(80,45%,55%)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <span>O número de semanas será <strong style="color:hsl(var(--primary))">calculado automaticamente</strong> com base nos subtópicos das matérias selecionadas e sua disponibilidade diária.</span>
           </div>
           <div class="wizard-footer">
             <button class="btn btn-outline" onclick="wizardPrev()">Voltar</button>
@@ -3712,6 +3731,30 @@
     </div>
   </div>
   <div class="contrib-tooltip" id="contrib-tooltip"></div>
+
+  <!-- ============ REVISÃO ============ -->
+  <div class="page" id="page-revisao">
+    <section class="section">
+      <div class="section-inner">
+        <div class="section-header">
+          <div class="section-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+          </div>
+          <div>
+            <h2 class="section-title">Fila de <span class="accent">Revisão</span></h2>
+            <p class="section-subtitle">Subtópicos estudados que precisam ser revisados hoje — baseado em repetição espaçada</p>
+          </div>
+          <div class="section-header-actions">
+            <button class="btn btn-outline" style="padding:8px 14px;font-size:.72rem;" onclick="renderRevisaoPage()">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+              Atualizar
+            </button>
+          </div>
+        </div>
+        <div id="revisao-page-content"></div>
+      </div>
+    </section>
+  </div>
 
 </main>
 
@@ -4219,7 +4262,7 @@
      =========================================== */
   const state = {
     wizardStep: 1,
-    wizardData: { banca: null, materias: [], horas: 4, dias: 6, semanas: 16 },
+    wizardData: { banca: null, materias: [], horas: 4, dias: 6 },
     history: JSON.parse(localStorage.getItem('ct_history') || '[]'),
     progresso: JSON.parse(localStorage.getItem('ct_progresso') || '{}'),
     currentPage: 'base'
@@ -4240,6 +4283,8 @@
     if (page === 'bancas') renderBancas();
     if (page === 'cronograma' && state.wizardStep === 1) renderWizardBancas();
     if (page === 'historico') renderHistorico();
+    if (page === 'revisao') renderRevisaoPage();
+    if (page === 'base') renderCronogramaDashboard();
   }
 
   /* ===========================================
@@ -4811,80 +4856,180 @@
   function renderRevisao() {
     const d = state.wizardData;
     const bancaNome = d.banca === 'custom' ? 'Personalizado' : (BANCAS.find(b => b.id === d.banca)?.nome || '—');
-    const materias = d.materias.map(id => DISCIPLINAS.find(x => x.id === id)?.nome).filter(Boolean);
+    const disciplinas = d.materias.map(id => DISCIPLINAS.find(x => x.id === id)).filter(Boolean);
+    const totalSubs = disciplinas.reduce((acc, disc) => acc + disc.grupos.reduce((a, g) => a + g.subs.length, 0), 0);
+    const semanasNecessarias = Math.ceil(totalSubs / d.dias);
+    const totalHoras = d.horas * d.dias * semanasNecessarias;
+
     document.getElementById('revisao-content').innerHTML = `
       <div class="result-summary">
         <div class="result-stat"><div class="result-stat-label">Banca</div><div class="result-stat-value">${bancaNome}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Matérias</div><div class="result-stat-value">${materias.length}</div></div>
+        <div class="result-stat"><div class="result-stat-label">Matérias</div><div class="result-stat-value">${disciplinas.length}</div></div>
         <div class="result-stat"><div class="result-stat-label">Horas/dia</div><div class="result-stat-value">${d.horas}h</div></div>
         <div class="result-stat"><div class="result-stat-label">Dias/semana</div><div class="result-stat-value">${d.dias}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Semanas</div><div class="result-stat-value">${d.semanas}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Total de horas</div><div class="result-stat-value">${d.horas * d.dias * d.semanas}h</div></div>
+        <div class="result-stat"><div class="result-stat-label">Semanas calculadas</div><div class="result-stat-value">${semanasNecessarias}</div></div>
+        <div class="result-stat"><div class="result-stat-label">Total subtópicos</div><div class="result-stat-value">${totalSubs}</div></div>
+        <div class="result-stat"><div class="result-stat-label">Total de horas</div><div class="result-stat-value">${totalHoras}h</div></div>
       </div>
-      <h4 style="font-family:var(--font-heading);font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;color:hsl(var(--accent));margin:20px 0 10px;">Matérias Selecionadas</h4>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;">
-        ${materias.map(m => `<span class="material-chip" style="padding:6px 12px;font-size:.8rem;">${m}</span>`).join('')}
+
+      <div style="padding:12px 16px;background:hsl(var(--accent)/.08);border:1px solid hsl(var(--accent)/.2);border-radius:var(--radius);font-size:.82rem;color:hsl(var(--accent));margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        Cronograma sequencial: do 1º subtópico ao último, dia a dia, em <strong>${semanasNecessarias} semanas</strong>.
+      </div>
+
+      <h4 style="font-family:var(--font-heading);font-size:.82rem;letter-spacing:1.5px;text-transform:uppercase;color:hsl(var(--accent));margin:0 0 12px;">Detalhamento por Disciplina</h4>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        ${disciplinas.map((disc, di) => {
+          const totalDisc = disc.grupos.reduce((a, g) => a + g.subs.length, 0);
+          const diasDisc = totalDisc;
+          const pct = Math.round((totalDisc / totalSubs) * 100);
+          return `
+          <div style="background:hsl(var(--card)/.5);border:1px solid hsl(var(--border)/.5);border-left:3px solid hsl(var(--primary)/.5);border-radius:var(--radius);overflow:hidden;">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(90deg,hsl(var(--primary)/.08),transparent);">
+              <span style="font-family:var(--font-mono);font-size:.68rem;color:hsl(var(--accent));font-weight:700;min-width:28px;">${String(di+1).padStart(2,'0')}</span>
+              <span style="font-family:var(--font-heading);font-size:.88rem;font-weight:700;letter-spacing:.8px;flex:1;">${disc.nome}</span>
+              <span style="font-family:var(--font-mono);font-size:.72rem;color:hsl(var(--muted-foreground));">${totalDisc} subtópicos · ${pct}%</span>
+            </div>
+            <div style="padding:10px 16px;display:flex;flex-wrap:wrap;gap:6px;">
+              ${disc.grupos.map(g => `
+                <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;background:hsl(var(--muted));border:1px solid hsl(var(--border));border-radius:3px;font-size:.72rem;color:hsl(var(--muted-foreground));">
+                  <span style="color:hsl(var(--accent));font-weight:600;">${g.subs.length}</span> ${g.nome}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `}).join('')}
       </div>
     `;
   }
 
   function wizardGenerate() {
-    // Build a weekly cronograma (simplified): distribute materias across weekdays, proportional to their freq
     const d = state.wizardData;
-    const materias = d.materias.map(id => DISCIPLINAS.find(x => x.id === id)).filter(Boolean);
-    const weights = materias.map(m => m.editais);
-    const totalWeight = weights.reduce((s, w) => s + w, 0);
+    const disciplinas = d.materias.map(id => DISCIPLINAS.find(x => x.id === id)).filter(Boolean);
+    const bancaNome = d.banca === 'custom' ? 'Personalizado' : (BANCAS.find(b => b.id === d.banca)?.nome || '—');
 
-    // For each of 4 sample weeks, distribute
-    const weeks = [];
-    for (let w = 1; w <= Math.min(4, d.semanas); w++) {
-      const days = [];
-      const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-      for (let day = 0; day < d.dias; day++) {
-        // Rotate materias through days, giving more weight to high-freq
-        const matIdx = (w * 7 + day) % materias.length;
-        const m = materias[matIdx];
-        // Pick a group and then a subtopic from the new grupos structure
-        const grupo = m.grupos[(w + day) % m.grupos.length];
-        const sub = grupo.subs[(w + day) % grupo.subs.length];
-        days.push({
-          day: dayNames[day],
-          materia: m.nome,
-          grupo: grupo.nome,
-          topico: sub,
-          horas: d.horas
+    // Ordenar disciplinas: se banca selecionada, usar peso da banca; senão por editais
+    let discOrdenadas = [...disciplinas];
+    if (d.banca && d.banca !== 'custom') {
+      const banca = BANCAS.find(b => b.id === d.banca);
+      if (banca) {
+        discOrdenadas.sort((a, b) => {
+          const wa = Object.entries(banca.materias).find(([k]) => a.nome.toLowerCase().includes(k.toLowerCase()))?.[1] || a.editais;
+          const wb = Object.entries(banca.materias).find(([k]) => b.nome.toLowerCase().includes(k.toLowerCase()))?.[1] || b.editais;
+          return wb - wa;
         });
       }
-      weeks.push({ num: w, days });
+    } else {
+      discOrdenadas.sort((a, b) => b.editais - a.editais);
     }
 
-    const bancaNome = d.banca === 'custom' ? 'Personalizado' : (BANCAS.find(b => b.id === d.banca)?.nome || '—');
+    // Flatten todos os subtópicos em ordem sequencial (do primeiro ao último)
+    const allItems = [];
+    discOrdenadas.forEach(disc => {
+      disc.grupos.forEach((grupo, gi) => {
+        grupo.subs.forEach((sub, si) => {
+          allItems.push({ materia: disc.nome, grupo: grupo.nome, topico: sub });
+        });
+      });
+    });
+
+    const totalSubs = allItems.length;
+    const semanasNecessarias = Math.ceil(totalSubs / d.dias);
+    const totalHoras = d.horas * d.dias * semanasNecessarias;
+
+    // Distribuir sequencialmente: cada dia recebe um subtópico na ordem
+    const weeks = [];
+    const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+    let subIdx = 0;
+
+    for (let w = 0; w < semanasNecessarias; w++) {
+      const days = [];
+      for (let day = 0; day < d.dias && subIdx < totalSubs; day++) {
+        days.push({
+          day: dayNames[day % 7],
+          ...allItems[subIdx],
+          horas: d.horas
+        });
+        subIdx++;
+      }
+      weeks.push({ num: w + 1, days });
+    }
+
+    // Agrupar semanas para exibição — mostrar todas, mas colapsadas a partir da 5ª
+    const semanasVisiveis = weeks.slice(0, 4);
+    const semanasRestantes = weeks.slice(4);
 
     document.getElementById('cronograma-result').innerHTML = `
       <div class="result-summary">
         <div class="result-stat"><div class="result-stat-label">Banca</div><div class="result-stat-value">${bancaNome}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Total Horas</div><div class="result-stat-value">${d.horas * d.dias * d.semanas}h</div></div>
-        <div class="result-stat"><div class="result-stat-label">Matérias</div><div class="result-stat-value">${materias.length}</div></div>
-        <div class="result-stat"><div class="result-stat-label">Semanas</div><div class="result-stat-value">${d.semanas}</div></div>
+        <div class="result-stat"><div class="result-stat-label">Total Horas</div><div class="result-stat-value">${totalHoras}h</div></div>
+        <div class="result-stat"><div class="result-stat-label">Subtópicos</div><div class="result-stat-value">${totalSubs}</div></div>
+        <div class="result-stat"><div class="result-stat-label">Semanas</div><div class="result-stat-value">${semanasNecessarias}</div></div>
+        <div class="result-stat"><div class="result-stat-label">Matérias</div><div class="result-stat-value">${disciplinas.length}</div></div>
+        <div class="result-stat"><div class="result-stat-label">${d.horas}h × ${d.dias}d/sem</div><div class="result-stat-value">${d.horas * d.dias}h/sem</div></div>
       </div>
-      <p style="color:hsl(var(--muted-foreground));font-size:.85rem;margin-bottom:16px;">Amostra das primeiras ${weeks.length} semanas (de ${d.semanas} totais). O cronograma completo distribui tópicos proporcionalmente à frequência em editais.</p>
-      ${weeks.map(wk => `
+
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:hsl(var(--primary)/.08);border:1px solid hsl(var(--primary)/.2);border-radius:var(--radius);margin-bottom:20px;font-size:.82rem;color:hsl(var(--muted-foreground));">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="hsl(80,45%,55%)" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+        Cronograma sequencial completo — do 1º subtópico ao ${totalSubs}º, dia a dia. Cada sessão = <strong style="color:hsl(var(--primary))">${d.horas}h de estudo focado</strong>.
+      </div>
+
+      ${semanasVisiveis.map(wk => `
         <div class="cronograma-week">
-          <h4>Semana ${wk.num}</h4>
+          <h4>Semana ${wk.num} <span style="font-size:.7rem;opacity:.6;font-weight:400;">— ${wk.days[0]?.topico?.substring(0,40)}…</span></h4>
           ${wk.days.map(day => `
             <div class="cronograma-day">
               <span class="cronograma-day-label">${day.day}</span>
               <div class="cronograma-day-subject">
                 <strong>${day.materia}</strong>
                 <span style="color:hsl(var(--accent));font-size:.78rem;margin-left:6px;">${day.grupo}</span>
-                <div style="color:hsl(var(--muted-foreground));font-size:.8rem;margin-top:2px;">${day.topico}</div>
+                <div style="color:hsl(var(--muted-foreground));font-size:.8rem;margin-top:3px;line-height:1.4;">${day.topico}</div>
               </div>
               <span class="cronograma-day-hours">${day.horas}h</span>
             </div>
           `).join('')}
         </div>
       `).join('')}
+
+      ${semanasRestantes.length > 0 ? `
+        <details style="margin-top:4px;">
+          <summary style="cursor:pointer;padding:12px 18px;background:hsl(var(--muted)/.4);border:1px solid hsl(var(--border)/.5);border-radius:var(--radius);font-family:var(--font-heading);font-size:.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:hsl(var(--muted-foreground));list-style:none;display:flex;align-items:center;gap:10px;transition:all .15s;" onmouseover="this.style.color='hsl(var(--foreground))'" onmouseout="this.style.color='hsl(var(--muted-foreground))'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            Ver mais ${semanasRestantes.length} semanas (Sem. 5 a ${semanasNecessarias})
+          </summary>
+          <div style="margin-top:8px;">
+            ${semanasRestantes.map(wk => `
+              <div class="cronograma-week">
+                <h4>Semana ${wk.num} <span style="font-size:.7rem;opacity:.6;font-weight:400;">— ${wk.days[0]?.topico?.substring(0,40)}…</span></h4>
+                ${wk.days.map(day => `
+                  <div class="cronograma-day">
+                    <span class="cronograma-day-label">${day.day}</span>
+                    <div class="cronograma-day-subject">
+                      <strong>${day.materia}</strong>
+                      <span style="color:hsl(var(--accent));font-size:.78rem;margin-left:6px;">${day.grupo}</span>
+                      <div style="color:hsl(var(--muted-foreground));font-size:.8rem;margin-top:3px;line-height:1.4;">${day.topico}</div>
+                    </div>
+                    <span class="cronograma-day-hours">${day.horas}h</span>
+                  </div>
+                `).join('')}
+              </div>
+            `).join('')}
+          </div>
+        </details>
+      ` : ''}
     `;
+    // Salvar cronograma ativo no localStorage para o dashboard
+    const cronoAtivo = {
+      bancaNome,
+      horas: d.horas,
+      dias: d.dias,
+      semanas: semanasNecessarias,
+      totalSubs,
+      geradoEm: new Date().toISOString(),
+      items: allItems
+    };
+    localStorage.setItem('ct_cronograma_ativo', JSON.stringify(cronoAtivo));
+
     wizardGoStep(5);
   }
 
@@ -4925,13 +5070,11 @@
 
   function wizardReset() {
     state.wizardStep = 1;
-    state.wizardData = { banca: null, materias: [], horas: 4, dias: 6, semanas: 16 };
+    state.wizardData = { banca: null, materias: [], horas: 4, dias: 6 };
     document.getElementById('horas-range').value = 4;
     document.getElementById('dias-range').value = 6;
-    document.getElementById('semanas-range').value = 16;
     document.getElementById('horas-value').textContent = 4;
     document.getElementById('dias-value').textContent = 6;
-    document.getElementById('semanas-value').textContent = 16;
     wizardGoStep(1);
     renderWizardBancas();
   }
@@ -4939,6 +5082,9 @@
   function saveCronograma() {
     const d = state.wizardData;
     const bancaNome = d.banca === 'custom' ? 'Personalizado' : (BANCAS.find(b => b.id === d.banca)?.nome || '—');
+    const disciplinas = d.materias.map(id => DISCIPLINAS.find(x => x.id === id)).filter(Boolean);
+    const totalSubs = disciplinas.reduce((acc, disc) => acc + disc.grupos.reduce((a, g) => a + g.subs.length, 0), 0);
+    const semanasNecessarias = Math.ceil(totalSubs / d.dias);
     const entry = {
       id: Date.now(),
       tipo: 'cronograma',
@@ -4947,7 +5093,7 @@
       materias: d.materias.length,
       horas: d.horas,
       dias: d.dias,
-      semanas: d.semanas,
+      semanas: semanasNecessarias,
       data: new Date().toISOString()
     };
     state.history.unshift(entry);
@@ -4960,7 +5106,6 @@
   document.addEventListener('input', (e) => {
     if (e.target.id === 'horas-range') state.wizardData.horas = +e.target.value;
     if (e.target.id === 'dias-range') state.wizardData.dias = +e.target.value;
-    if (e.target.id === 'semanas-range') state.wizardData.semanas = +e.target.value;
   });
 
   /* ===========================================
@@ -5615,6 +5760,7 @@
     renderDicasTaticas('dicas-container');
     renderRankingMaterias('ranking-container');
     renderCountdown();
+    renderCronogramaDashboard();
   }
 
   // Aguardar DOM e depois inicializar
@@ -6074,7 +6220,7 @@ function gerarResumoDisc(discId){
 
 /* === INIT V3 === */
 function initV3(){
-  const navLinks=document.querySelector('.nav-links');
+  const navLinks=document.querySelector('.nav-row2 .nav-links');
   if(navLinks&&!document.querySelector('[data-nav="mapa"]')){
     navLinks.insertAdjacentHTML('beforeend',`
       <button class="nav-link new-feature" data-nav="mapa" onclick="goTo('mapa')">
@@ -6095,6 +6241,245 @@ function initV3(){
       </button>`);
   }
   setTimeout(checkMissao,2500);
+}
+
+/* ========================================
+   CRONOGRAMA DASHBOARD WIDGET
+   ======================================== */
+function renderCronogramaDashboard() {
+  const el = document.getElementById('cronograma-dashboard-widget');
+  const section = document.getElementById('cronograma-dashboard-section');
+  if (!el) return;
+
+  const raw = localStorage.getItem('ct_cronograma_ativo');
+  if (!raw) { section.style.display = 'none'; return; }
+
+  let crono;
+  try { crono = JSON.parse(raw); } catch(e) { section.style.display = 'none'; return; }
+
+  section.style.display = 'block';
+
+  // Calcular qual é a semana atual (desde a geração)
+  const geradoEm = new Date(crono.geradoEm);
+  const hoje = new Date();
+  const diasDecorridos = Math.floor((hoje - geradoEm) / (1000*60*60*24));
+  const semanaAtual = Math.min(Math.floor(diasDecorridos / 7) + 1, crono.semanas);
+  const diaAtualNaSemana = diasDecorridos % 7; // 0 = mesmo dia da geração
+
+  // Pegar os itens da semana atual
+  const inicioSemana = (semanaAtual - 1) * crono.dias;
+  const fimSemana = Math.min(inicioSemana + crono.dias, crono.totalSubs);
+  const itensSemana = crono.items.slice(inicioSemana, fimSemana);
+
+  // Item de hoje (aproximação)
+  const idxHoje = Math.min(diaAtualNaSemana, itensSemana.length - 1);
+  const itemHoje = itensSemana[idxHoje] || itensSemana[0];
+  const progressoGeral = Math.min(Math.round((inicioSemana / crono.totalSubs) * 100), 100);
+
+  const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+
+  el.innerHTML = `
+    <div style="background:linear-gradient(135deg,hsl(var(--card)),hsl(var(--secondary)));border:1px solid hsl(var(--primary)/.3);border-radius:var(--radius);padding:24px;margin-bottom:0;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,hsl(var(--primary)/.08),transparent 70%);pointer-events:none;"></div>
+      <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;position:relative;">
+
+        <!-- Header -->
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+            <span style="font-family:var(--font-heading);font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:hsl(var(--primary));padding:3px 10px;background:hsl(var(--primary)/.12);border:1px solid hsl(var(--primary)/.25);border-radius:3px;">◆ CRONOGRAMA ATIVO</span>
+            <span style="font-family:var(--font-mono);font-size:.72rem;color:hsl(var(--muted-foreground));">${crono.bancaNome}</span>
+            <span style="font-family:var(--font-mono);font-size:.72rem;color:hsl(var(--muted-foreground));">Semana ${semanaAtual}/${crono.semanas}</span>
+          </div>
+
+          <!-- Progresso geral -->
+          <div style="margin-bottom:16px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-family:var(--font-heading);font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:hsl(var(--muted-foreground));">Progresso do plano</span>
+              <span style="font-family:var(--font-mono);font-size:.78rem;font-weight:600;color:hsl(var(--primary));">${progressoGeral}%</span>
+            </div>
+            <div style="height:5px;background:hsl(var(--muted));border-radius:3px;overflow:hidden;">
+              <div style="height:100%;width:${progressoGeral}%;background:linear-gradient(90deg,hsl(var(--primary)),hsl(var(--accent)));border-radius:3px;transition:width .5s ease;"></div>
+            </div>
+          </div>
+
+          <!-- Hoje -->
+          ${itemHoje ? `
+          <div style="padding:14px 16px;background:hsl(var(--primary)/.08);border:1px solid hsl(var(--primary)/.2);border-left:3px solid hsl(var(--primary));border-radius:var(--radius);margin-bottom:14px;">
+            <div style="font-family:var(--font-heading);font-size:.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:hsl(var(--accent));margin-bottom:6px;">📌 Hoje · ${dayNames[diaAtualNaSemana] || dayNames[0]}</div>
+            <div style="font-family:var(--font-heading);font-size:.95rem;font-weight:700;letter-spacing:.5px;margin-bottom:2px;">${itemHoje.materia}</div>
+            <div style="font-size:.8rem;color:hsl(var(--accent));margin-bottom:4px;">${itemHoje.grupo}</div>
+            <div style="font-size:.85rem;color:hsl(var(--foreground)/.85);line-height:1.4;">${itemHoje.topico}</div>
+          </div>
+          ` : ''}
+
+          <!-- Semana atual — todos os dias -->
+          <div style="font-family:var(--font-heading);font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:hsl(var(--muted-foreground));margin-bottom:10px;">Semana ${semanaAtual} completa</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            ${itensSemana.map((item, i) => `
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:hsl(var(--muted)/${i === idxHoje ? '.8' : '.35'});border:1px solid hsl(var(--border)/${i === idxHoje ? '1' : '.5'});border-radius:var(--radius);transition:all .15s;${i === idxHoje ? 'border-left:3px solid hsl(var(--primary));' : ''}">
+                <span style="font-family:var(--font-heading);font-size:.68rem;font-weight:700;letter-spacing:1px;color:${i === idxHoje ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))'};min-width:30px;">${dayNames[i] || dayNames[i % 7]}</span>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:.78rem;font-weight:600;color:hsl(var(--foreground)/.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.materia} — <span style="color:hsl(var(--muted-foreground));font-weight:400;">${item.topico}</span></div>
+                </div>
+                <span style="font-family:var(--font-mono);font-size:.72rem;color:hsl(var(--accent));padding:2px 8px;background:hsl(var(--accent)/.1);border:1px solid hsl(var(--accent)/.2);border-radius:3px;">${crono.horas}h</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Ações -->
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:160px;flex-shrink:0;">
+          <button class="btn btn-primary" onclick="goTo('cronograma')" style="justify-content:center;font-size:.78rem;padding:10px 16px;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+            Ver Cronograma
+          </button>
+          <button class="btn btn-outline" onclick="goTo('revisao')" style="justify-content:center;font-size:.78rem;padding:10px 16px;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+            Revisar Hoje
+          </button>
+          <div style="padding:12px;background:hsl(var(--muted)/.3);border:1px solid hsl(var(--border)/.4);border-radius:var(--radius);text-align:center;">
+            <div style="font-family:var(--font-heading);font-size:1.6rem;font-weight:700;color:hsl(var(--primary));line-height:1;">${crono.semanas - semanaAtual + 1}</div>
+            <div style="font-family:var(--font-heading);font-size:.62rem;color:hsl(var(--muted-foreground));letter-spacing:1px;text-transform:uppercase;">semanas restantes</div>
+          </div>
+          <div style="padding:12px;background:hsl(var(--muted)/.3);border:1px solid hsl(var(--border)/.4);border-radius:var(--radius);text-align:center;">
+            <div style="font-family:var(--font-heading);font-size:1.6rem;font-weight:700;color:hsl(var(--accent));line-height:1;">${crono.totalSubs}</div>
+            <div style="font-family:var(--font-heading);font-size:.62rem;color:hsl(var(--muted-foreground));letter-spacing:1px;text-transform:uppercase;">subtópicos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ========================================
+   PÁGINA DE REVISÃO
+   ======================================== */
+function renderRevisaoPage() {
+  const el = document.getElementById('revisao-page-content');
+  if (!el) return;
+
+  // Coletar todos os subtópicos estudados do localStorage (estado de progresso)
+  const progresso = state.progresso || {};
+  const hoje = new Date();
+  const todayStr = hoje.toISOString().split('T')[0];
+
+  // Carregar dados de revisão (datas de última revisão e próxima revisão)
+  let revisaoData = {};
+  try { revisaoData = JSON.parse(localStorage.getItem('ct_revisao') || '{}'); } catch(e) {}
+
+  // Intervalos do spaced repetition: 1, 3, 7, 14, 30 dias
+  const INTERVALOS = [1, 3, 7, 14, 30];
+
+  // Montar lista de todos os subtópicos estudados com status de revisão
+  const todos = [];
+  DISCIPLINAS.forEach(disc => {
+    disc.grupos.forEach((grupo, gi) => {
+      grupo.subs.forEach((sub, si) => {
+        const sid = subtopicId(disc.id, gi, si);
+        if (progresso[sid]) {
+          const rev = revisaoData[sid] || { nivel: 0, proxima: todayStr, ultima: null };
+          const overdue = rev.proxima <= todayStr;
+          todos.push({ sid, sub, grupo: grupo.nome, disc: disc.nome, discId: disc.id, gi, si, ...rev, overdue });
+        }
+      });
+    });
+  });
+
+  const paraHoje = todos.filter(t => t.overdue);
+  const proximas = todos.filter(t => !t.overdue).sort((a, b) => a.proxima.localeCompare(b.proxima));
+
+  const NIVEL_LABELS = ['Novo', 'Dia 1', 'Dia 3', 'Semana 1', 'Quinzena', 'Mensal'];
+
+  el.innerHTML = `
+    <!-- Stats rápidos -->
+    <div class="result-summary" style="margin-bottom:24px;">
+      <div class="result-stat"><div class="result-stat-label">Para hoje</div><div class="result-stat-value" style="color:hsl(0 70% 65%);">${paraHoje.length}</div></div>
+      <div class="result-stat"><div class="result-stat-label">Próximas</div><div class="result-stat-value">${proximas.length}</div></div>
+      <div class="result-stat"><div class="result-stat-label">Estudados</div><div class="result-stat-value">${todos.length}</div></div>
+      <div class="result-stat"><div class="result-stat-label">Dominados</div><div class="result-stat-value" style="color:hsl(var(--primary));">${todos.filter(t => t.nivel >= 4).length}</div></div>
+    </div>
+
+    ${paraHoje.length === 0 && todos.length === 0 ? `
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+        <h4>Nenhum tópico estudado ainda</h4>
+        <p>Vá em <strong>Disciplinas</strong>, estude os subtópicos clicando neles e eles aparecerão aqui para revisão.</p>
+        <button class="btn btn-primary" onclick="goTo('direito-pm')" style="margin-top:16px;">Ir para Disciplinas</button>
+      </div>
+    ` : ''}
+
+    ${paraHoje.length > 0 ? `
+      <div style="margin-bottom:24px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <span style="font-family:var(--font-heading);font-size:.82rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:hsl(0 70% 65%);">🔥 Para Revisar Hoje (${paraHoje.length})</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${paraHoje.map(t => `
+            <div class="sr-item ${t.nivel === 0 ? 'urgent' : 'today'}" style="display:flex;align-items:center;gap:14px;padding:16px 18px;">
+              <div class="sr-info">
+                <div class="sr-topic">${t.sub}</div>
+                <div class="sr-meta">
+                  <span style="color:hsl(var(--accent));">${t.disc}</span>
+                  <span>${t.grupo}</span>
+                  <span style="padding:1px 7px;background:hsl(var(--muted));border:1px solid hsl(var(--border));border-radius:3px;font-family:var(--font-mono);font-size:.68rem;">${NIVEL_LABELS[Math.min(t.nivel, 5)]}</span>
+                </div>
+              </div>
+              <button class="sr-action" onclick="marcarRevisado('${t.sid}', ${t.nivel})">
+                ✓ Revisado
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : todos.length > 0 ? `
+      <div style="padding:16px 20px;background:hsl(var(--primary)/.08);border:1px solid hsl(var(--primary)/.2);border-radius:var(--radius);margin-bottom:24px;text-align:center;">
+        <div style="font-size:2rem;margin-bottom:6px;">✅</div>
+        <div style="font-family:var(--font-heading);font-size:.88rem;font-weight:700;letter-spacing:1px;color:hsl(var(--primary));">Tudo revisado por hoje!</div>
+        <div style="font-size:.82rem;color:hsl(var(--muted-foreground));margin-top:4px;">Próxima revisão: ${proximas[0]?.proxima || '—'}</div>
+      </div>
+    ` : ''}
+
+    ${proximas.length > 0 ? `
+      <div>
+        <div style="font-family:var(--font-heading);font-size:.82rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:hsl(var(--muted-foreground));margin-bottom:12px;">📅 Próximas Revisões</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${proximas.slice(0, 20).map(t => `
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:hsl(var(--card)/.5);border:1px solid hsl(var(--border)/.4);border-radius:var(--radius);">
+              <span style="font-family:var(--font-mono);font-size:.72rem;font-weight:600;color:hsl(var(--muted-foreground));min-width:70px;">${t.proxima}</span>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:.84rem;color:hsl(var(--foreground)/.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${t.sub}</div>
+                <div style="font-size:.72rem;color:hsl(var(--muted-foreground));">${t.disc} › ${t.grupo}</div>
+              </div>
+              <span style="font-family:var(--font-heading);font-size:.62rem;color:hsl(var(--muted-foreground));padding:2px 7px;background:hsl(var(--muted));border-radius:3px;border:1px solid hsl(var(--border));">${NIVEL_LABELS[Math.min(t.nivel, 5)]}</span>
+            </div>
+          `).join('')}
+          ${proximas.length > 20 ? `<div style="text-align:center;font-size:.8rem;color:hsl(var(--muted-foreground));padding:8px;">+${proximas.length - 20} mais...</div>` : ''}
+        </div>
+      </div>
+    ` : ''}
+  `;
+}
+
+function marcarRevisado(sid, nivelAtual) {
+  let revisaoData = {};
+  try { revisaoData = JSON.parse(localStorage.getItem('ct_revisao') || '{}'); } catch(e) {}
+
+  const INTERVALOS = [1, 3, 7, 14, 30];
+  const novoNivel = Math.min(nivelAtual + 1, INTERVALOS.length - 1);
+  const diasAte = INTERVALOS[novoNivel] || 30;
+
+  const proxima = new Date();
+  proxima.setDate(proxima.getDate() + diasAte);
+
+  revisaoData[sid] = {
+    nivel: novoNivel,
+    proxima: proxima.toISOString().split('T')[0],
+    ultima: new Date().toISOString().split('T')[0]
+  };
+
+  localStorage.setItem('ct_revisao', JSON.stringify(revisaoData));
+  showToast(`Revisão agendada para ${diasAte > 1 ? `${diasAte} dias` : 'amanhã'}`);
+  renderRevisaoPage();
 }
 
 document.addEventListener('DOMContentLoaded',()=>setTimeout(initV3,250));
