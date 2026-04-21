@@ -3593,30 +3593,60 @@
     list.innerHTML = '';
 
     DISCIPLINAS
-      .filter(d => !q || d.nome.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q)
-        || d.grupos.some(g => g.nome.toLowerCase().includes(q) || g.subs.some(s => s.toLowerCase().includes(q))))
-      .forEach(d => {
-        const percentCls = d.editais >= 90 ? '' : d.editais >= 70 ? 'mid' : 'low';
-        const div = document.createElement('a');
-        div.className = 'discipline-row';
-        div.onclick = () => showDisciplineDetail(d.id);
-        div.innerHTML = `
-          <div class="discipline-icon">${iconSvg(d.icon)}</div>
-          <div class="discipline-info">
-            <div class="discipline-title">
-              ${d.nome}
-              <span class="discipline-percent ${percentCls}">${d.editais}% editais</span>
-            </div>
-            <div class="discipline-desc">${d.desc}</div>
-          </div>
-          <div class="discipline-meta">
-            ${d.subtopicos} subtópicos
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          </div>
-        `;
-        list.appendChild(div);
-      });
-  }
+      const DISCIPLINAS = [
+  {
+    id: 'penal',
+    nome: 'Direito Penal',
+    grupos: [
+      {
+        nome: 'Parte Geral: Aplicação da Lei',
+        subs: [
+          { 
+            nome: 'Princípios e Anterioridade (⚡️)', 
+            dica: 'A banca ama cobrar a Súmula 711 do STF (Lei Penal mais grave no crime continuado).',
+            artigos: 'Arts. 1º ao 6º',
+            incidencia: 'Alta'
+          },
+          { 
+            nome: 'Tempo e Lugar do Crime', 
+            dica: 'Lembre-se do mnemônico L.U.T.A. (Lugar = Ubiquidade / Tempo = Atividade).',
+            artigos: 'Arts. 4º e 6º',
+            incidencia: 'Média'
+          }
+        ]
+      },
+      {
+        nome: 'Teoria do Crime: Fato Típico',
+        subs: [
+          { 
+            nome: 'Relação de Causalidade (⚡️)', 
+            dica: 'Foco no Art. 13, § 2º: A omissão do garantidor (quem tem o dever de agir).',
+            artigos: 'Art. 13',
+            incidencia: 'Altíssima'
+          },
+          { 
+            nome: 'Tentativa e Arrependimento (⚡️)', 
+            dica: 'Diferencie Arrependimento Posterior (Art. 16) de Desistência Voluntária (Art. 15).',
+            artigos: 'Arts. 14 ao 16',
+            incidencia: 'Alta'
+          }
+        ]
+      },
+      {
+        nome: 'Crimes Contra a Adm. Pública',
+        subs: [
+          { 
+            nome: 'Peculato e Concussão (⚡️)', 
+            dica: 'Cuidado: Na Concussão se EXIGE, na Corrupção Passiva se SOLICITA ou RECEBE.',
+            artigos: 'Arts. 312 ao 317',
+            incidencia: 'Altíssima'
+          }
+        ]
+      }
+    ]
+  },
+  // Adicione as outras conforme a mesma estrutura...
+];
 
   function subtopicId(discId, groupIdx, subIdx) {
     return `${discId}__${groupIdx}__${subIdx}`;
